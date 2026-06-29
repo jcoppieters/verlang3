@@ -273,19 +273,20 @@ async function loadSidebar() {
     let html = '';
     
     // My Lists
-    if (myLists.length > 0) {
-      html += `
-        <div class="sidebar-group">
+    html += `
+      <div class="sidebar-group">
+        <div class="sidebar-header">
           <div class="sidebar-group-title">My Lists</div>
-          ${myLists.map(list => `
-            <a href="#/lists/${list.id}" class="sidebar-item" data-list-id="${list.id}">
-              <span class="sidebar-item-text">${escapeHtml(list.name)}</span>
-              <span class="sidebar-item-count">${list.itemCount || 0}</span>
-            </a>
-          `).join('')}
+          <button class="btn btn-sm btn-primary" onclick="showCreateListModal()">+ New</button>
         </div>
-      `;
-    }
+        ${myLists.length > 0 ? myLists.map(list => `
+          <a href="#/lists/${list.id}" class="sidebar-item" data-list-id="${list.id}">
+            <span class="sidebar-item-text">${escapeHtml(list.name)}</span>
+            <span class="sidebar-item-count">${list.itemCount || 0}</span>
+          </a>
+        `).join('') : ''}
+      </div>
+    `;
     
     // Group followed lists by owner
     if (followedLists.length > 0) {

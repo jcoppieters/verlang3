@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { query, queryOne, execute } from '../config/database';
 import { encodeShareId, decodeShareId } from '../utils/helpers';
+import { AuthRequest } from '../middleware/auth';
 
 // Get public shared list
 export async function getSharedList(req: Request, res: Response): Promise<void> {
@@ -116,9 +117,10 @@ export async function donateFromShare(req: Request, res: Response): Promise<void
 }
 
 // Search for users and public lists
-export async function search(req: Request, res: Response): Promise<void> {
+export async function search(req: AuthRequest, res: Response): Promise<void> {
   try {
     const q = req.query.q as string;
+    const userId = req.user?.id;
 
     if (!q || q.trim().length < 2) {
       res.status(400).json({
@@ -139,16 +141,17 @@ export async function search(req: Request, res: Response): Promise<void> {
       [searchTerm, searchTerm]
     );
 
-    // Search public lists
+    // Search public lists (excluding current user's own lists)
     const lists = await query(
       `SELECT l.*, u.name as username, u.id as userId,
         (SELECT COUNT(*) FROM items WHERE list = l.id AND status != 'D') as itemCount
        FROM lists l
        JOIN users u ON l.user = u.id
        WHERE l.public = 'Y' 
+       AND l.user != ?
        AND (l.name LIKE ? OR u.name LIKE ?)
        LIMIT 20`,
-      [searchTerm, searchTerm]
+      [userId, searchTerm, searchTerm]
     );
 
     res.json({

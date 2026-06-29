@@ -23,10 +23,6 @@ async function renderListDetailPage(listId) {
       <div class="container">
         <!-- Header -->
         <div class="mb-6">
-          <div class="flex items-center gap-3 mb-2">
-            <a href="#/lists" class="btn-text">← Back to Lists</a>
-          </div>
-          
           <div class="flex justify-between items-start">
             <div class="flex items-center gap-3" style="flex: 1;">
               <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0;">
@@ -42,7 +38,6 @@ async function renderListDetailPage(listId) {
               ${isOwner ? 'Your list' : `by ${escapeHtml(list.ownerName)}`} • 
               ${items.length} items
             </p>
-          </div>
           </div>
         </div>
         
@@ -433,17 +428,16 @@ async function showEditItemModal(itemId) {
                   <span class="text-small text-muted">Higher numbers appear first</span>
                 </div>
               </div>
-              
-              <div class="form-group" style="border-top: 1px solid var(--color-border-light); padding-top: var(--space-4); margin-top: var(--space-4);">
-                <button type="button" class="btn btn-danger btn-sm" onclick="deleteItemFromModal(${itemId}, '${escapeHtml(item.name)}')">
-                  🗑️ Delete Item
-                </button>
-              </div>
             </div>
             
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-              <button type="submit" class="btn btn-primary">Save Changes</button>
+            <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+              <button type="button" class="btn btn-danger" onclick="deleteItemFromModal(${itemId}, '${escapeHtml(item.name)}')">
+                Delete
+              </button>
+              <div style="display: flex; gap: var(--space-2);">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
             </div>
           </form>
         </div>
