@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Verlanglijstje.be - Create and share wishlists with friends and family">
+  <title>Verlanglijstje.be - Your Wishlist</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <!-- App Container -->
+  <div id="app">
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar" style="display: none;">
+      <div class="container navbar-content">
+        <!-- Mobile Menu Button -->
+        <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()">☰</button>
+        
+        <div class="navbar-brand">
+          <a href="#/" class="brand-link">
+            <span class="brand-icon">🎁</span>
+            <span class="brand-name">Verlanglijstje</span>
+          </a>
+        </div>
+        
+        <div class="navbar-menu">
+          <a href="#/lists" class="nav-link">My Lists</a>
+          <a href="#/search" class="nav-link">Search</a>
+          <div class="navbar-user">
+            <a href="#/profile" class="user-name" id="userName"></a>
+            <button class="btn-text" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- App Layout with Sidebar -->
+    <div class="app-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar" style="display: none;">
+        <div class="sidebar-header">
+          <h3>My Lists</h3>
+          <button class="btn btn-sm btn-primary" onclick="showCreateListModal()">+ New</button>
+        </div>
+        <div class="sidebar-content" id="sidebarContent">
+          <!-- Lists will be loaded here -->
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="main-content" id="mainContent">
+        <!-- Dynamic content will be rendered here -->
+        <div class="loading-screen">
+          <div class="spinner"></div>
+          <p>Loading...</p>
+        </div>
+      </main>
+    </div>
+
+    <!-- Toast Container for notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+  </div>
+
+  <!-- Modal Container -->
+  <div id="modalContainer"></div>
+
+  <!-- JavaScript -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/lists.js"></script>
+  <script src="/js/items.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
