@@ -44,14 +44,9 @@ async function renderListDetailPage(listId) {
               ` : ''}
             </div>
             ${isOwner ? `
-              <div class="flex gap-2">
-                <button class="btn btn-sm btn-secondary" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="Edit List" style="min-width: 90px;">
-                  ✏️ Edit
-                </button>
-                <button class="btn btn-sm btn-danger" onclick="deleteList(${listId}, '${escapeHtml(list.name)}')" title="Delete List" style="min-width: 90px;">
-                  🗑️ Delete
-                </button>
-              </div>
+              <button class="btn btn-sm btn-secondary" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="Edit List" style="min-width: 90px;">
+                ✏️ Edit
+              </button>
             ` : ''}
           </div>
           <p class="text-muted">
@@ -829,6 +824,8 @@ async function followListFromSearch(listId) {
     
     if (response.success) {
       ui.showToast('Now following this list!', 'success');
+      // Refresh sidebar to show the newly followed list
+      await loadSidebar();
     }
   } catch (error) {
     ui.showToast(error.message || 'Failed to follow list', 'error');

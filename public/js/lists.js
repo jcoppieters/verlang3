@@ -285,6 +285,7 @@ function editList(id, name, isPublic) {
           </div>
           
           <div class="modal-footer">
+            <button type="button" class="btn btn-danger" onclick="deleteList(${id}, '${escapeHtml(name)}'); closeModal();" style="margin-right: auto;">🗑️ Delete List</button>
             <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
             <button type="submit" class="btn btn-primary">Save Changes</button>
           </div>
