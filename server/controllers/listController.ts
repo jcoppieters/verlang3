@@ -113,7 +113,7 @@ export async function getList(req: AuthRequest, res: Response): Promise<void> {
     const items = await query(
       `SELECT i.*, 
         IFNULL(u.name, i.givenname) as username,
-        IF(i.showfrom <= DATE(NOW()), 'T', 'F') as shown
+        IF(i.showfrom IS NULL OR i.showfrom <= DATE(NOW()), 'T', 'F') as shown
        FROM items i
        LEFT JOIN users u ON i.givenby = u.id
        WHERE i.list = ?

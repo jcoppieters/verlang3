@@ -129,7 +129,6 @@ function renderItemCard(item, isOwner) {
         ${!isOwner && item.status === 'S' && item.username ? `
           <p class="text-small" style="color: var(--color-success); margin-top: var(--space-2);">
             ${t('donated_by')} ${escapeHtml(item.username)}
-            ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
           </p>
         ` : ''}
         
@@ -167,7 +166,6 @@ function renderItemCard(item, isOwner) {
             ${!isOwner && item.status === 'S' && item.username ? `
               <p class="text-small" style="color: var(--color-success);">
                 ${t('donated_by')} ${escapeHtml(item.username)}
-                ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
               </p>
             ` : ''}
             
