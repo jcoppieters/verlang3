@@ -318,7 +318,15 @@ async function handleEditList(e) {
     if (response.success) {
       ui.showToast('List updated successfully!', 'success');
       closeModal();
-      renderListsPage();
+      // Reload current page instead of navigating away
+      const currentHash = window.location.hash;
+      if (currentHash.includes('/lists/')) {
+        // On list detail page - reload it
+        window.location.reload();
+      } else {
+        // On lists overview - reload it
+        renderListsPage();
+      }
     }
   } catch (error) {
     ui.showToast(error.message || 'Failed to update list', 'error');
@@ -340,7 +348,8 @@ async function deleteList(id, name) {
     
     if (response.success) {
       ui.showToast('List deleted successfully', 'success');
-      renderListsPage();
+      // Always navigate to lists overview after delete
+      window.location.hash = '#/lists';
     }
   } catch (error) {
     ui.showToast(error.message || 'Failed to delete list', 'error');
