@@ -127,7 +127,7 @@ export async function updateItem(req: AuthRequest, res: Response): Promise<void>
       `UPDATE items 
        SET name = ?, url = ?, description = ?, price = ?, priority = ?, showfrom = ?
        WHERE id = ?`,
-      [name, url || '', description || '', price || '', priority || 1, showfrom, itemId]
+      [name, url || '', description || '', price || '', priority || 1, showfrom || null, itemId]
     );
 
     // Update list lastupdate

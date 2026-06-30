@@ -79,7 +79,7 @@ export async function getList(req: AuthRequest, res: Response): Promise<void> {
 
     // Get list with owner info
     const list = await queryOne<ListWithOwner>(
-      `SELECT l.*, u.name as username, u.id as userId
+      `SELECT l.*, u.name as ownerName, u.id as userId
        FROM lists l
        JOIN users u ON l.user = u.id
        WHERE l.id = ?`,
