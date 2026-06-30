@@ -745,36 +745,62 @@ async function handleSearch(e) {
     
     const { users, lists } = response;
     
-    resultsContainer.innerHTML = `
-      ${users.length > 0 ? `
-        <section class="mb-8">
-          <h2 class="mb-4" style="font-size: var(--text-xl); font-weight: var(--font-semibold);">
-            Users (${users.length})
-          </h2>
-          <div class="grid grid-cols-1" style="gap: var(--space-4);">
-            ${users.map(renderUserResult).join('')}
-          </div>
-        </section>
-      ` : ''}
+    // Group lists by user
+    const grouped = {};
+    
+    // Add users with their lists
+    lists.forEach(list => {
+      const userName = list.username || 'Unknown';
+      const userId = list.userId;
       
-      ${lists.length > 0 ? `
-        <section>
-          <h2 class="mb-4" style="font-size: var(--text-xl); font-weight: var(--font-semibold);">
-            Public Lists (${lists.length})
-          </h2>
-          <div class="grid grid-cols-1" style="gap: var(--space-4);">
-            ${lists.map(renderListResult).join('')}
+      if (!grouped[userId]) {
+        grouped[userId] = {
+          name: userName,
+          lists: []
+        };
+      }
+      grouped[userId].lists.push(list);
+    });
+    
+    // Add users without lists (only if they match the search but have no public lists shown)
+    users.forEach(user => {
+      if (!grouped[user.id]) {
+        grouped[user.id] = {
+          name: user.name,
+          username: user.username,
+          lists: []
+        };
+      } else {
+        // Add username info if not already there
+        grouped[user.id].username = user.username;
+      }
+    });
+    
+    const hasResults = Object.keys(grouped).length > 0;
+    
+    resultsContainer.innerHTML = hasResults ? `
+      <div class="grid grid-cols-1" style="gap: var(--space-6);">
+        ${Object.entries(grouped).map(([userId, userData]) => `
+          <div>
+            <h2 class="mb-3" style="font-size: var(--text-xl); font-weight: var(--font-semibold); color: var(--color-text-primary);">
+              ${escapeHtml(userData.name)}
+            </h2>
+            ${userData.lists.length > 0 ? `
+              <div class="grid grid-cols-1" style="gap: var(--space-3); margin-left: var(--space-4);">
+                ${userData.lists.map(renderListResult).join('')}
+              </div>
+            ` : `
+              <p class="text-muted" style="margin-left: var(--space-4);">No public lists</p>
+            `}
           </div>
-        </section>
-      ` : ''}
-      
-      ${users.length === 0 && lists.length === 0 ? `
-        <div class="empty-state">
-          <div class="empty-state-icon">🔍</div>
-          <h3 class="empty-state-title">No results found</h3>
-          <p class="empty-state-description">Try searching with different keywords</p>
-        </div>
-      ` : ''}
+        `).join('')}
+      </div>
+    ` : `
+      <div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <h3 class="empty-state-title">No results found</h3>
+        <p class="empty-state-description">Try searching with different keywords</p>
+      </div>
     `;
   } catch (error) {
     resultsContainer.innerHTML = `<p class="text-danger">${error.message}</p>`;
@@ -782,32 +808,15 @@ async function handleSearch(e) {
 }
 
 /**
- * Render user search result
- */
-function renderUserResult(user) {
-  return `
-    <div class="card">
-      <div class="flex justify-between items-center">
-        <div>
-          <h3 class="card-title">${escapeHtml(user.name)}</h3>
-          <p class="text-small text-muted">@${escapeHtml(user.username)}</p>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="followUser(${user.id})">Follow</button>
-      </div>
-    </div>
-  `;
-}
-
-/**
  * Render list search result
  */
 function renderListResult(list) {
   return `
-    <div class="card">
+    <div class="card" style="padding: var(--space-3);">
       <div class="flex justify-between items-start">
         <div style="flex: 1;">
-          <h3 class="card-title mb-1">${escapeHtml(list.name)}</h3>
-          <p class="text-small text-muted">by ${escapeHtml(list.username)} • ${list.itemCount || 0} items</p>
+          <h3 class="card-title mb-1" style="font-size: var(--text-base);">${escapeHtml(list.name)}</h3>
+          <p class="text-small text-muted">${list.itemCount || 0} items</p>
         </div>
         <button class="btn btn-primary btn-sm" onclick="followListFromSearch(${list.id})">Follow</button>
       </div>
