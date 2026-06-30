@@ -1038,6 +1038,11 @@ button {
   border-radius: var(--radius-full);
 }
 
+/* Indent lists under followed users */
+.sidebar-group-title ~ .sidebar-item {
+  margin-left: var(--space-4);
+}
+
 /* ============================================
    RESPONSIVE BREAKPOINTS
    ============================================ */
