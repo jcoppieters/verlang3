@@ -202,14 +202,7 @@ function getStatusBadge(status) {
  * Render owner action buttons
  */
 function renderOwnerActions(item) {
-  let html = `<button class="btn btn-sm btn-secondary" onclick="showEditItemModal(${item.id})" title="${t('edit')}">✏️ ${t('edit')}</button>`;
-  
-  // Show donated status only if shown='T' (showfrom date has passed or is NULL)
-  if (item.status === 'S' && item.shown === 'T') {
-    html += `<span class="badge badge-success" style="margin-left: 0.5rem;">✓ Donated</span>`;
-  }
-  
-  return html;
+  return `<button class="btn btn-sm btn-secondary" onclick="showEditItemModal(${item.id})" title="${t('edit')}">✏️ ${t('edit')}</button>`;
 }
 
 /**
