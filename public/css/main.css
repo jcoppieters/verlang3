@@ -455,6 +455,67 @@ button {
 }
 
 /* ============================================
+   DRAG AND DROP
+   ============================================ */
+.item-card[draggable="true"] {
+  position: relative;
+  cursor: move;
+}
+
+.drag-handle {
+  position: absolute;
+  left: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--text-xl);
+  color: var(--color-text-light);
+  cursor: grab;
+  user-select: none;
+  padding: var(--space-2);
+}
+
+.item-card[draggable="true"]:hover .drag-handle {
+  color: var(--color-primary);
+}
+
+.item-card.dragging {
+  opacity: 0.5;
+  transform: scale(0.98);
+  box-shadow: var(--shadow-xl);
+}
+
+.item-card.drag-over {
+  border-top: 3px solid var(--color-primary);
+  margin-top: var(--space-2);
+}
+
+.drag-placeholder {
+  background-color: var(--color-primary-pale);
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+}
+
+/* Adjust card padding when draggable */
+.item-card[draggable="true"] {
+  padding-left: calc(var(--space-6) + 2rem);
+}
+
+/* Mobile adjustments for drag handle */
+@media (max-width: 767px) {
+  .drag-handle {
+    font-size: var(--text-2xl);
+    padding: var(--space-3);
+    left: 0;
+    touch-action: none;
+  }
+  
+  .item-card[draggable="true"] {
+    padding-left: calc(var(--space-4) + 2.5rem);
+  }
+}
+
+/* ============================================
    GRID LAYOUTS
    ============================================ */
 .grid {
@@ -965,6 +1026,23 @@ button {
 /* ============================================
    RESPONSIVE BREAKPOINTS
    ============================================ */
+
+/* Mobile-specific styles */
+@media (max-width: 767px) {
+  .flex.justify-between.items-start {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  
+  .flex.gap-2 {
+    width: 100%;
+    justify-content: stretch;
+  }
+  
+  .flex.gap-2 .btn {
+    flex: 1;
+  }
+}
 
 /* Tablet & Desktop (min-width: 768px) */
 @media (min-width: 768px) {

@@ -38,17 +38,17 @@ async function renderListDetailPage(listId) {
                 ${escapeHtml(list.name)}
               </h1>
               ${isOwner ? `
-                <button class="btn btn-sm btn-primary" onclick="showAddItemModal(${listId})" title="Add Item">
+                <button class="btn btn-sm btn-primary" onclick="showAddItemModal(${listId})" title="Add Item" style="min-width: 90px;">
                   + Add
                 </button>
               ` : ''}
             </div>
             ${isOwner ? `
               <div class="flex gap-2">
-                <button class="btn btn-sm btn-secondary" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="Edit List">
+                <button class="btn btn-sm btn-secondary" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="Edit List" style="min-width: 90px;">
                   ✏️ Edit
                 </button>
-                <button class="btn btn-sm btn-danger" onclick="deleteList(${listId}, '${escapeHtml(list.name)}')" title="Delete List">
+                <button class="btn btn-sm btn-danger" onclick="deleteList(${listId}, '${escapeHtml(list.name)}')" title="Delete List" style="min-width: 90px;">
                   🗑️ Delete
                 </button>
               </div>
@@ -67,6 +67,11 @@ async function renderListDetailPage(listId) {
         </div>
       </div>
     `;
+    
+    // Initialize drag and drop for owners
+    if (isOwner && items.length > 0) {
+      initializeDragAndDrop();
+    }
   } catch (error) {
     ui.showError(error.message || 'Failed to load list');
   }
@@ -80,7 +85,8 @@ function renderItemCard(item, isOwner) {
   const canInteract = !isOwner && item.status === 'A';
   
   return `
-    <div class="card">
+    <div class="card item-card" ${isOwner ? `draggable="true" data-item-id="${item.id}" data-item-priority="${item.priority || 50}"` : ''}>
+      ${isOwner ? '<div class="drag-handle">⋮⋮</div>' : ''}
       <div class="flex justify-between items-start gap-4">
         <!-- Item Details -->
         <div style="flex: 1;">
@@ -331,17 +337,9 @@ function showAddItemModal(listId) {
               <input type="url" id="itemUrl" name="url" class="input" placeholder="https://example.com/product" />
             </div>
             
-            <div class="grid grid-cols-2" style="gap: var(--space-4);">
-              <div class="form-group">
-                <label class="label" for="itemPrice">Price (€)</label>
-                <input type="number" id="itemPrice" name="price" class="input" step="0.01" min="0" placeholder="0.00" />
-              </div>
-              
-              <div class="form-group">
-                <label class="label" for="itemPriority">Priority (for ordering)</label>
-                <input type="number" id="itemPriority" name="priority" class="input" value="50" min="1" max="100" />
-                <span class="text-small text-muted">Higher numbers appear first</span>
-              </div>
+            <div class="form-group">
+              <label class="label" for="itemPrice">Price (€)</label>
+              <input type="number" id="itemPrice" name="price" class="input" step="0.01" min="0" placeholder="0.00" />
             </div>
           </div>
           
@@ -370,7 +368,7 @@ async function handleAddItemModal(e) {
     description: formData.get('description').trim(),
     url: formData.get('url').trim(),
     price: formData.get('price') || '',
-    priority: parseInt(formData.get('priority')) || 50,
+    priority: 100, // New items get highest priority by default
   };
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -436,17 +434,9 @@ async function showEditItemModal(itemId) {
                 <input type="url" id="editItemUrl" name="url" class="input" value="${escapeHtml(item.url || '')}" />
               </div>
               
-              <div class="grid grid-cols-2" style="gap: var(--space-4);">
-                <div class="form-group">
-                  <label class="label" for="editItemPrice">Price (€)</label>
-                  <input type="number" id="editItemPrice" name="price" class="input" step="0.01" min="0" value="${item.price || ''}" />
-                </div>
-                
-                <div class="form-group">
-                  <label class="label" for="editItemPriority">Priority (for ordering)</label>
-                  <input type="number" id="editItemPriority" name="priority" class="input" value="${item.priority || 50}" min="1" max="100" />
-                  <span class="text-small text-muted">Higher numbers appear first</span>
-                </div>
+              <div class="form-group">
+                <label class="label" for="editItemPrice">Price (€)</label>
+                <input type="number" id="editItemPrice" name="price" class="input" step="0.01" min="0" value="${item.price || ''}" />
               </div>
             </div>
             
@@ -483,7 +473,6 @@ async function handleEditItemModal(e) {
     description: formData.get('description').trim(),
     url: formData.get('url').trim(),
     price: formData.get('price') || '',
-    priority: parseInt(formData.get('priority')) || 50,
   };
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -848,4 +837,223 @@ async function followListFromSearch(listId) {
  */
 async function followUser(userId) {
   ui.showToast('Feature coming soon: Follow all user lists', 'info');
+}
+
+/**
+ * Initialize drag and drop for reordering items
+ */
+let draggedElement = null;
+let draggedOverElement = null;
+let touchStartY = 0;
+let touchCurrentY = 0;
+let placeholder = null;
+
+function initializeDragAndDrop() {
+  const itemCards = document.querySelectorAll('.item-card[draggable="true"]');
+  
+  itemCards.forEach(card => {
+    // Desktop drag and drop
+    card.addEventListener('dragstart', handleDragStart);
+    card.addEventListener('dragover', handleDragOver);
+    card.addEventListener('drop', handleDrop);
+    card.addEventListener('dragend', handleDragEnd);
+    card.addEventListener('dragenter', handleDragEnter);
+    card.addEventListener('dragleave', handleDragLeave);
+    
+    // Mobile touch events
+    card.addEventListener('touchstart', handleTouchStart, { passive: false });
+    card.addEventListener('touchmove', handleTouchMove, { passive: false });
+    card.addEventListener('touchend', handleTouchEnd);
+  });
+}
+
+function handleDragStart(e) {
+  draggedElement = e.currentTarget;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
+}
+
+function handleDragOver(e) {
+  if (e.preventDefault) {
+    e.preventDefault();
+  }
+  e.dataTransfer.dropEffect = 'move';
+  return false;
+}
+
+function handleDragEnter(e) {
+  if (e.currentTarget !== draggedElement) {
+    e.currentTarget.classList.add('drag-over');
+    draggedOverElement = e.currentTarget;
+  }
+}
+
+function handleDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function handleDrop(e) {
+  if (e.stopPropagation) {
+    e.stopPropagation();
+  }
+  
+  const target = e.currentTarget;
+  
+  if (draggedElement !== target) {
+    // Get the container
+    const container = document.getElementById('itemsContainer');
+    const items = Array.from(container.querySelectorAll('.item-card'));
+    
+    const draggedIndex = items.indexOf(draggedElement);
+    const targetIndex = items.indexOf(target);
+    
+    // Reorder in DOM
+    if (draggedIndex < targetIndex) {
+      target.parentNode.insertBefore(draggedElement, target.nextSibling);
+    } else {
+      target.parentNode.insertBefore(draggedElement, target);
+    }
+    
+    // Update priorities
+    updateItemPriorities();
+  }
+  
+  return false;
+}
+
+function handleDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  
+  // Remove all drag-over classes
+  const items = document.querySelectorAll('.item-card');
+  items.forEach(item => {
+    item.classList.remove('drag-over');
+  });
+  
+  draggedElement = null;
+  draggedOverElement = null;
+}
+
+/**
+ * Touch event handlers for mobile
+ */
+function handleTouchStart(e) {
+  draggedElement = e.currentTarget;
+  touchStartY = e.touches[0].clientY;
+  
+  draggedElement.classList.add('dragging');
+  
+  // Create a placeholder
+  placeholder = document.createElement('div');
+  placeholder.className = 'drag-placeholder';
+  placeholder.style.height = draggedElement.offsetHeight + 'px';
+}
+
+function handleTouchMove(e) {
+  e.preventDefault();
+  
+  if (!draggedElement) return;
+  
+  touchCurrentY = e.touches[0].clientY;
+  const deltaY = touchCurrentY - touchStartY;
+  
+  // Move the element visually
+  draggedElement.style.transform = `translateY(${deltaY}px)`;
+  draggedElement.style.zIndex = '1000';
+  
+  // Find element under touch point
+  const touchX = e.touches[0].clientX;
+  const touchY = e.touches[0].clientY;
+  
+  // Temporarily hide the dragged element to get the element underneath
+  draggedElement.style.visibility = 'hidden';
+  const elementBelow = document.elementFromPoint(touchX, touchY);
+  draggedElement.style.visibility = 'visible';
+  
+  // Find the card element
+  const cardBelow = elementBelow?.closest('.item-card');
+  
+  if (cardBelow && cardBelow !== draggedElement) {
+    // Remove previous highlights
+    document.querySelectorAll('.item-card').forEach(card => {
+      card.classList.remove('drag-over');
+    });
+    
+    cardBelow.classList.add('drag-over');
+    
+    // Reorder in DOM
+    const container = document.getElementById('itemsContainer');
+    const items = Array.from(container.querySelectorAll('.item-card'));
+    const draggedIndex = items.indexOf(draggedElement);
+    const targetIndex = items.indexOf(cardBelow);
+    
+    if (draggedIndex < targetIndex) {
+      cardBelow.parentNode.insertBefore(draggedElement, cardBelow.nextSibling);
+    } else {
+      cardBelow.parentNode.insertBefore(draggedElement, cardBelow);
+    }
+    
+    // Reset position for new placement
+    touchStartY = touchCurrentY;
+    draggedElement.style.transform = '';
+  }
+}
+
+function handleTouchEnd(e) {
+  if (!draggedElement) return;
+  
+  // Reset styles
+  draggedElement.style.transform = '';
+  draggedElement.style.zIndex = '';
+  draggedElement.classList.remove('dragging');
+  
+  // Remove all drag-over classes
+  document.querySelectorAll('.item-card').forEach(card => {
+    card.classList.remove('drag-over');
+  });
+  
+  // Remove placeholder if exists
+  if (placeholder && placeholder.parentNode) {
+    placeholder.parentNode.removeChild(placeholder);
+  }
+  
+  // Update priorities
+  updateItemPriorities();
+  
+  draggedElement = null;
+  placeholder = null;
+}
+
+/**
+ * Update priorities after reordering
+ */
+async function updateItemPriorities() {
+  const container = document.getElementById('itemsContainer');
+  const items = Array.from(container.querySelectorAll('.item-card'));
+  
+  // Get list ID from URL
+  const listId = window.location.hash.match(/#\/lists\/(\d+)/)?.[1];
+  if (!listId) {
+    ui.showToast('List ID not found', 'error');
+    return;
+  }
+  
+  // Get item IDs in current order (top to bottom)
+  const itemIds = items.map(item => parseInt(item.dataset.itemId));
+  
+  // Send batch update to backend
+  try {
+    await itemsAPI.reorder(listId, itemIds);
+    
+    // Update data attributes for visual consistency
+    items.forEach((item, index) => {
+      item.dataset.itemPriority = 100 - index;
+    });
+    
+    ui.showToast('Order updated', 'success');
+  } catch (error) {
+    ui.showToast('Failed to update order', 'error');
+    console.error('Update priorities error:', error);
+  }
 }

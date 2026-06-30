@@ -432,3 +432,75 @@ export async function takebackItem(req: AuthRequest, res: Response): Promise<voi
     });
   }
 }
+
+// Reorder items (batch update priorities)
+export async function reorderItems(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        error: 'Not authenticated'
+      });
+      return;
+    }
+
+    const listId = parseInt(req.params.listId);
+    const { itemIds } = req.body; // Array of item IDs in new order
+
+    if (!Array.isArray(itemIds) || itemIds.length === 0) {
+      res.status(400).json({
+        success: false,
+        error: 'Item IDs array is required'
+      });
+      return;
+    }
+
+    // Check list ownership
+    const list = await queryOne(
+      'SELECT user FROM lists WHERE id = ?',
+      [listId]
+    );
+
+    if (!list) {
+      res.status(404).json({
+        success: false,
+        error: 'List not found'
+      });
+      return;
+    }
+
+    if (list.user !== req.user.id) {
+      res.status(403).json({
+        success: false,
+        error: 'You can only reorder items in your own lists'
+      });
+      return;
+    }
+
+    // Update priorities based on position in array
+    // Top item gets highest priority (100), bottom gets lowest
+    const updatePromises = itemIds.map((itemId: number, index: number) => {
+      const priority = 100 - index;
+      return execute(
+        'UPDATE items SET priority = ? WHERE id = ? AND list = ?',
+        [priority, itemId, listId]
+      );
+    });
+
+    await Promise.all(updatePromises);
+
+    // Update list lastupdate
+    await execute('UPDATE lists SET lastupdate = NOW() WHERE id = ?', [listId]);
+
+    res.json({
+      success: true,
+      message: 'Items reordered successfully'
+    });
+  } catch (error) {
+    console.error('Reorder items error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to reorder items'
+    });
+  }
+}

@@ -13,6 +13,9 @@ router.post('/lists/:listId/items', validateItem, itemController.addItem);
 router.put('/items/:id', validateItem, itemController.updateItem);
 router.delete('/items/:id', itemController.deleteItem);
 
+// Reorder items
+router.post('/lists/:listId/items/reorder', itemController.reorderItems);
+
 // Item action routes
 router.post('/items/:id/reserve', itemController.reserveItem);
 router.post('/items/:id/donate', itemController.donateItem);

@@ -235,6 +235,14 @@ const itemsAPI = {
       method: 'POST',
     });
   },
+  
+  // Reorder items in list
+  reorder: async (listId, itemIds) => {
+    return apiRequest(`/lists/${listId}/items/reorder`, {
+      method: 'POST',
+      body: { itemIds },
+    });
+  },
 };
 
 /**
