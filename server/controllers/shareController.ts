@@ -137,7 +137,7 @@ export async function search(req: AuthRequest, res: Response): Promise<void> {
       `SELECT id, name, username, since
        FROM users
        WHERE name LIKE ? OR username LIKE ?
-       LIMIT 20`,
+       LIMIT 50`,
       [searchTerm, searchTerm]
     );
 
@@ -150,7 +150,7 @@ export async function search(req: AuthRequest, res: Response): Promise<void> {
        WHERE l.public = 'Y' 
        AND l.user != ?
        AND (l.name LIKE ? OR u.name LIKE ?)
-       LIMIT 20`,
+       LIMIT 50`,
       [userId, searchTerm, searchTerm]
     );
 
