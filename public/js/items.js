@@ -262,55 +262,55 @@ function renderAddItemPage(listId) {
   main.innerHTML = `
     <div class="container" style="max-width: 600px;">
       <div class="mb-6">
-        <a href="#/lists/${listId}" class="btn-text">← Back to List</a>
+        <a href="#/lists/${listId}" class="btn-text">${t('back_to_list')}</a>
       </div>
       
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">Add New Item</h2>
+          <h2 class="card-title">${t('add_new_item')}</h2>
         </div>
         
         <form id="addItemForm" data-list-id="${listId}">
           <div class="form-group">
-            <label class="label" for="itemName">Item Name *</label>
-            <input type="text" id="itemName" name="name" class="input" required placeholder="e.g., Wireless Headphones" />
+            <label class="label" for="itemName">${t('item_name')} *</label>
+            <input type="text" id="itemName" name="name" class="input" required placeholder="${t('enter_item_name')}" />
           </div>
           
           <div class="form-group">
-            <label class="label" for="itemDescription">Description</label>
-            <textarea id="itemDescription" name="description" class="textarea" placeholder="Any specific details or preferences..."></textarea>
+            <label class="label" for="itemDescription">${t('description')}</label>
+            <textarea id="itemDescription" name="description" class="textarea" placeholder="${t('enter_item_description')}"></textarea>
           </div>
           
           <div class="form-group">
-            <label class="label" for="itemUrl">URL / Link</label>
-            <input type="url" id="itemUrl" name="url" class="input" placeholder="https://example.com/product" />
+            <label class="label" for="itemUrl">${t('url_link')}</label>
+            <input type="url" id="itemUrl" name="url" class="input" placeholder="${t('enter_item_link')}" />
           </div>
           
           <div class="grid grid-cols-2" style="gap: var(--space-4);">
             <div class="form-group">
-              <label class="label" for="itemPrice">Price (€)</label>
-              <input type="number" id="itemPrice" name="price" class="input" step="0.01" min="0" placeholder="0.00" />
+              <label class="label" for="itemPrice">${t('price')}</label>
+              <input type="number" id="itemPrice" name="price" class="input" step="0.01" min="0" placeholder="${t('enter_item_price')}" />
             </div>
             
             <div class="form-group">
-              <label class="label" for="itemPriority">Priority</label>
+              <label class="label" for="itemPriority">${t('priority')}</label>
               <select id="itemPriority" name="priority" class="select">
-                <option value="1">Low</option>
-                <option value="2">Medium</option>
-                <option value="3" selected>High</option>
+                <option value="1">${t('low')}</option>
+                <option value="2">${t('medium')}</option>
+                <option value="3" selected>${t('high')}</option>
               </select>
             </div>
           </div>
           
           <div class="form-group">
-            <label class="label" for="itemShowFrom">Show From Date</label>
+            <label class="label" for="itemShowFrom">${t('show_from_date')}</label>
             <input type="date" id="itemShowFrom" name="showfrom" class="input" />
-            <p class="text-small text-muted mt-1">Item will only be visible after this date</p>
+            <p class="text-small text-muted mt-1">${t('show_from_hint')}</p>
           </div>
           
           <div class="card-footer">
-            <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
-            <button type="submit" class="btn btn-primary">Add Item</button>
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">${t('cancel')}</button>
+            <button type="submit" class="btn btn-primary">${t('add_item')}</button>
           </div>
         </form>
       </div>
@@ -340,19 +340,19 @@ async function handleAddItem(e) {
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="loading-inline"></span> Adding...';
+  submitBtn.innerHTML = `<span class="loading-inline"></span> ${t('adding')}`;
   
   try {
     const response = await itemsAPI.add(listId, itemData);
     
     if (response.success) {
-      ui.showToast('Item added successfully!', 'success');
+      ui.showToast(t('item_added'), 'success');
       window.location.hash = `#/lists/${listId}`;
     }
   } catch (error) {
     ui.showToast(error.message || 'Failed to add item', 'error');
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Add Item';
+    submitBtn.textContent = t('add_item');
   }
 }
 
@@ -423,20 +423,20 @@ async function handleAddItemModal(e) {
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="loading-inline"></span> Adding...';
+  submitBtn.innerHTML = `<span class="loading-inline"></span> ${t('adding')}`;
   
   try {
     const response = await itemsAPI.add(listId, itemData);
     
     if (response.success) {
-      ui.showToast('Item added successfully!', 'success');
+      ui.showToast(t('item_added'), 'success');
       closeModal();
       window.location.reload();
     }
   } catch (error) {
     ui.showToast(error.message || 'Failed to add item', 'error');
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Add Item';
+    submitBtn.textContent = t('add_item');
   }
 }
 
@@ -454,7 +454,7 @@ async function showEditItemModal(itemId) {
     const item = response.items?.find(i => i.id === itemId);
     
     if (!item) {
-      ui.showToast('Item not found', 'error');
+      ui.showToast(t('item_not_found'), 'error');
       return;
     }
     
@@ -463,29 +463,29 @@ async function showEditItemModal(itemId) {
       <div class="modal-overlay" onclick="closeModal(event)">
         <div class="modal item-modal" onclick="event.stopPropagation()">
           <div class="modal-header">
-            <h2>Edit Item</h2>
+            <h2>${t('edit_item')}</h2>
             <button class="modal-close" onclick="closeModal()">&times;</button>
           </div>
           
           <form id="editItemModalForm" data-item-id="${itemId}">
             <div class="modal-body">
               <div class="form-group">
-                <label class="label" for="editItemName">Item Name *</label>
+                <label class="label" for="editItemName">${t('item_name')} *</label>
                 <input type="text" id="editItemName" name="name" class="input" required value="${escapeHtml(item.name)}" />
               </div>
               
               <div class="form-group">
-                <label class="label" for="editItemDescription">Description</label>
+                <label class="label" for="editItemDescription">${t('description')}</label>
                 <textarea id="editItemDescription" name="description" class="textarea">${escapeHtml(item.description || '')}</textarea>
               </div>
               
               <div class="form-group">
-                <label class="label" for="editItemUrl">URL / Link</label>
+                <label class="label" for="editItemUrl">${t('url_link')}</label>
                 <input type="url" id="editItemUrl" name="url" class="input" value="${escapeHtml(item.url || '')}" />
               </div>
               
               <div class="form-group">
-                <label class="label" for="editItemPrice">Price (€)</label>
+                <label class="label" for="editItemPrice">${t('price')}</label>
                 <input type="number" id="editItemPrice" name="price" class="input" step="0.01" min="0" value="${item.price || ''}" />
               </div>
             </div>
@@ -507,7 +507,7 @@ async function showEditItemModal(itemId) {
     document.getElementById('editItemModalForm').addEventListener('submit', handleEditItemModal);
     setupUrlAutoFormat('editItemUrl');
   } catch (error) {
-    ui.showToast('Failed to load item', 'error');
+    ui.showToast(t('failed_to_load_item'), 'error');
   }
 }
 
@@ -528,13 +528,13 @@ async function handleEditItemModal(e) {
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="loading-inline"></span> Saving...';
+  submitBtn.innerHTML = `<span class="loading-inline"></span> ${t('saving')}`;
   
   try {
     const response = await itemsAPI.update(itemId, itemData);
     
     if (response.success) {
-      ui.showToast('Item updated successfully!', 'success');
+      ui.showToast(t('item_updated'), 'success');
       closeModal();
       window.location.reload();
     }
