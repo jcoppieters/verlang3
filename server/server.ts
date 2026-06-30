@@ -55,6 +55,30 @@ const authLimiter = rateLimit({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// API Request Logging
+app.use('/api', (req: Request, _res: Response, next: NextFunction) => {
+  const timestamp = new Date().toISOString();
+  const method = req.method;
+  const path = req.path;
+  const body = req.body;
+  const params = req.params;
+  const query = req.query;
+  
+  // Build summary of important arguments
+  const argsSummary: string[] = [];
+  if (Object.keys(params).length > 0) argsSummary.push(`params: ${JSON.stringify(params)}`);
+  if (Object.keys(query).length > 0) argsSummary.push(`query: ${JSON.stringify(query)}`);
+  if (Object.keys(body).length > 0) {
+    // Don't log passwords
+    const sanitizedBody = { ...body };
+    if (sanitizedBody.password) sanitizedBody.password = '***';
+    argsSummary.push(`body: ${JSON.stringify(sanitizedBody)}`);
+  }
+  
+  console.log(`[${timestamp}] ${method} ${path} ${argsSummary.length > 0 ? '| ' + argsSummary.join(', ') : ''}`);
+  next();
+});
+
 // Apply rate limiting
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);

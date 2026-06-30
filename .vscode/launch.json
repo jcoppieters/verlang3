@@ -14,8 +14,7 @@
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
       "envFile": "${workspaceFolder}/.env",
       "restart": true,
-      "stopOnEntry": false,
-      "outputCapture": "std"
+      "stopOnEntry": false
     }
   ]
 }

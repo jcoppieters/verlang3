@@ -505,6 +505,39 @@ button {
   .item-card[draggable="true"] {
     padding-left: calc(var(--space-4) + 2.5rem);
   }
+  
+  /* Make login/register forms take more space on mobile */
+  body > #app > .app-layout > .main-content > .container {
+    margin-top: 20px !important;
+    max-width: 100% !important;
+    padding: var(--space-4);
+  }
+  
+  body > #app > .app-layout > .main-content > .container .card {
+    padding: var(--space-8);
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  body > #app > .app-layout > .main-content > .container .card .form-group {
+    margin-bottom: var(--space-6);
+  }
+  
+  body > #app > .app-layout > .main-content > .container .card .input {
+    padding: var(--space-4);
+    font-size: var(--text-lg);
+  }
+  
+  body > #app > .app-layout > .main-content > .container .card .btn-lg {
+    padding: var(--space-4);
+    font-size: var(--text-lg);
+  }
+  
+  body > #app > .app-layout > .main-content > .container .card h1 {
+    font-size: var(--text-4xl) !important;
+  }
 }
 
 /* ============================================
