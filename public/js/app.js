@@ -128,6 +128,12 @@ const router = {
       if (user) {
         document.getElementById('userName').textContent = user.name;
       }
+      
+      // Update navbar translations
+      const searchLink = navbar.querySelector('a[href="#/search"]');
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (searchLink) searchLink.textContent = t('search');
+      if (logoutBtn) logoutBtn.textContent = t('logout');
     } else {
       navbar.style.display = 'none';
     }
@@ -156,9 +162,9 @@ const router = {
       <div class="container">
         <div class="empty-state">
           <div class="empty-state-icon">🔍</div>
-          <h2 class="empty-state-title">Page Not Found</h2>
-          <p class="empty-state-description">The page you're looking for doesn't exist.</p>
-          <a href="#/lists" class="btn btn-primary">Go to Lists</a>
+          <h2 class="empty-state-title">${t('page_not_found')}</h2>
+          <p class="empty-state-description">${t('page_not_found_desc')}</p>
+          <a href="#/lists" class="btn btn-primary">${t('go_to_lists')}</a>
         </div>
       </div>
     `;
@@ -225,7 +231,10 @@ function renderHomePage() {
 /**
  * Initialize Application
  */
-function initApp() {
+async function initApp() {
+  // Initialize i18n first
+  await i18n.init();
+  
   // Setup logout button
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
@@ -276,8 +285,8 @@ async function loadSidebar() {
     html += `
       <div class="sidebar-group">
         <div class="sidebar-group-header">
-          <div class="sidebar-group-title">My Lists</div>
-          <button class="btn btn-sm btn-primary" onclick="showCreateListModal()">+ New</button>
+          <span class="sidebar-group-title">${t('my_lists')}</span>
+          <button class="btn btn-sm btn-primary" onclick="showCreateListModal()">+ ${t('new')}</button>
         </div>
         ${myLists.length > 0 ? myLists.map(list => `
           <a href="#/lists/${list.id}" class="sidebar-item" data-list-id="${list.id}">

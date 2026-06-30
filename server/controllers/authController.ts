@@ -178,7 +178,7 @@ export async function getProfile(req: AuthRequest, res: Response): Promise<void>
     }
 
     const user = await queryOne<User>(
-      'SELECT id, username, name, email, since, lastlogin FROM users WHERE id = ?',
+      'SELECT id, username, name, email, language, since, lastlogin FROM users WHERE id = ?',
       [req.user.id]
     );
 
@@ -214,17 +214,17 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
       return;
     }
 
-    const { name, email } = req.body;
+    const { name, email, language } = req.body;
 
     // Update user (email doesn't need to be unique)
     await query(
-      'UPDATE users SET name = ?, email = ? WHERE id = ?',
-      [name || req.user.name, email, req.user.id]
+      'UPDATE users SET name = ?, email = ?, language = ? WHERE id = ?',
+      [name || req.user.name, email, language || 'NL', req.user.id]
     );
 
     // Get updated user
     const user = await queryOne<User>(
-      'SELECT id, username, name, email FROM users WHERE id = ?',
+      'SELECT id, username, name, email, language FROM users WHERE id = ?',
       [req.user.id]
     );
 

@@ -956,7 +956,7 @@ button {
   position: fixed;
   left: -280px;
   top: 0;
-  padding-top: 64px;
+  padding-top: 0;
   transition: left var(--transition-base);
   overflow-y: auto;
   z-index: 90;
@@ -1109,7 +1109,7 @@ button {
     position: sticky;
     height: 100vh;
     top: 0;
-    padding-top: 64px;
+    padding-top: 0;
   }
   
   .sidebar.open {

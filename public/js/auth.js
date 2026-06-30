@@ -13,14 +13,14 @@ function renderLoginPage() {
         <div class="text-center mb-6">
           <div style="font-size: 3rem; margin-bottom: 1rem;">🎁</div>
           <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0.5rem;">
-            Welcome Back
+            ${t('welcome_back')}
           </h1>
-          <p class="text-muted">Sign in to manage your wishlists</p>
+          <p class="text-muted">${t('sign_in_to_manage')}</p>
         </div>
         
         <form id="loginForm">
           <div class="form-group">
-            <label class="label" for="username">Username or Email</label>
+            <label class="label" for="username">${t('username_or_email')}</label>
             <input 
               type="text" 
               id="username" 
@@ -28,13 +28,13 @@ function renderLoginPage() {
               class="input" 
               required 
               autocomplete="username"
-              placeholder="Enter your username or email"
+              placeholder="${t('enter_username_or_email')}"
             />
             <span class="error-message" id="usernameError"></span>
           </div>
           
           <div class="form-group">
-            <label class="label" for="password">Password</label>
+            <label class="label" for="password">${t('password')}</label>
             <input 
               type="password" 
               id="password" 
@@ -42,21 +42,21 @@ function renderLoginPage() {
               class="input" 
               required 
               autocomplete="current-password"
-              placeholder="Enter your password"
+              placeholder="${t('enter_password')}"
             />
             <span class="error-message" id="passwordError"></span>
           </div>
           
           <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block btn-lg">
-              Sign In
+              ${t('sign_in')}
             </button>
           </div>
           
           <div class="text-center">
             <p class="text-small text-muted">
-              Don't have an account? 
-              <a href="#/register" class="text-primary">Sign up</a>
+              ${t('dont_have_account')} 
+              <a href="#/register" class="text-primary">${t('sign_up')}</a>
             </p>
           </div>
         </form>
