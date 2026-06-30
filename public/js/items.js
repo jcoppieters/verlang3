@@ -694,9 +694,12 @@ async function renderSearchPage() {
   const main = document.getElementById('mainContent');
   main.innerHTML = `
     <div class="container" style="max-width: 800px;">
-      <h1 class="mb-6" style="font-size: var(--text-3xl); font-weight: var(--font-bold);">
-        Search
-      </h1>
+      <div class="flex justify-between items-center mb-6">
+        <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0;">
+          Search
+        </h1>
+        <button class="btn btn-secondary btn-sm mobile-only" onclick="window.history.back()">Cancel</button>
+      </div>
       
       <div class="card mb-6">
         <form id="searchForm">

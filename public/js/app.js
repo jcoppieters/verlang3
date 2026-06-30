@@ -275,7 +275,7 @@ async function loadSidebar() {
     // My Lists
     html += `
       <div class="sidebar-group">
-        <div class="sidebar-header">
+        <div class="sidebar-group-header">
           <div class="sidebar-group-title">My Lists</div>
           <button class="btn btn-sm btn-primary" onclick="showCreateListModal()">+ New</button>
         </div>
