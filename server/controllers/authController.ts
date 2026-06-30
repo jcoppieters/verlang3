@@ -10,6 +10,7 @@ interface User {
   password: string;
   name: string;
   email: string;
+  language?: string;
   since: Date;
   lastlogin: Date | null;
 }
@@ -216,10 +217,31 @@ export async function updateProfile(req: AuthRequest, res: Response): Promise<vo
 
     const { name, email, language } = req.body;
 
+    // Get current user data for fallback values
+    const currentUser = await queryOne<User>(
+      'SELECT name, email, language FROM users WHERE id = ?',
+      [req.user.id]
+    );
+
+    if (!currentUser) {
+      res.status(404).json({
+        success: false,
+        error: 'User not found'
+      });
+      return;
+    }
+
+    // Prepare update data - use existing values if not provided
+    const updateData = {
+      name: name || currentUser.name,
+      email: email || currentUser.email,
+      language: language || currentUser.language || 'NL'
+    };
+
     // Update user (email doesn't need to be unique)
     await query(
       'UPDATE users SET name = ?, email = ?, language = ? WHERE id = ?',
-      [name || req.user.name, email, language || 'NL', req.user.id]
+      [updateData.name, updateData.email, updateData.language, req.user.id]
     );
 
     // Get updated user

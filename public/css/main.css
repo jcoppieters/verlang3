@@ -1068,9 +1068,13 @@ button {
     padding: var(--space-3) 0;
   }
   
-  /* Reduce sidebar top padding on mobile */
+  /* Reduce sidebar padding on mobile - starts at very top */
+  .sidebar {
+    padding-top: 0;
+  }
+  
   .sidebar-content {
-    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-2);
+    padding: var(--space-1) var(--space-2) var(--space-2) var(--space-2);
   }
   
   .flex.justify-between.items-start {
