@@ -3,6 +3,21 @@
  */
 
 /**
+ * Auto-format URL field to add https:// prefix
+ */
+function setupUrlAutoFormat(inputId) {
+  const urlInput = document.getElementById(inputId);
+  if (urlInput) {
+    urlInput.addEventListener('input', function(e) {
+      const value = e.target.value.trim();
+      if (value && !value.startsWith('http://') && !value.startsWith('https://')) {
+        e.target.value = 'https://' + value;
+      }
+    });
+  }
+}
+
+/**
  * Render List Detail Page (with items)
  */
 async function renderListDetailPage(listId) {
@@ -265,6 +280,7 @@ function renderAddItemPage(listId) {
   `;
   
   document.getElementById('addItemForm').addEventListener('submit', handleAddItem);
+  setupUrlAutoFormat('itemUrl');
 }
 
 /**
@@ -348,6 +364,7 @@ function showAddItemModal(listId) {
   `;
   
   document.getElementById('addItemModalForm').addEventListener('submit', handleAddItemModal);
+  setupUrlAutoFormat('itemUrl');
 }
 
 /**
@@ -450,6 +467,7 @@ async function showEditItemModal(itemId) {
     `;
     
     document.getElementById('editItemModalForm').addEventListener('submit', handleEditItemModal);
+    setupUrlAutoFormat('editItemUrl');
   } catch (error) {
     ui.showToast('Failed to load item', 'error');
   }
