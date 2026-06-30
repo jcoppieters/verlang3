@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
-import dotenv from 'dotenv';
+import { config } from './config/conf';
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -14,10 +14,8 @@ import shareRoutes from './routes/share';
 // Import database to test connection
 import './config/database';
 
-dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.server.port;
 
 // Security middleware
 app.use(helmet({
@@ -27,14 +25,14 @@ app.use(helmet({
 
 // CORS middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*',
+  origin: config.server.clientUrl,
   credentials: true
 }));
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
+  windowMs: config.rateLimit.windowMs,
+  max: config.rateLimit.maxRequests,
   message: {
     success: false,
     error: 'Too many requests. Please try again later.'
@@ -124,7 +122,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error('Unhandled error:', err);
   res.status(500).json({
     success: false,
-    error: process.env.NODE_ENV === 'production' 
+    error: config.env === 'production' 
       ? 'An unexpected error occurred' 
       : err.message
   });
@@ -134,7 +132,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 app.listen(PORT, () => {
   console.log('=================================');
   console.log(`✓ Server running on port ${PORT}`);
-  console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`✓ Environment: ${config.env}`);
   console.log(`✓ API: http://localhost:${PORT}/api`);
   console.log(`✓ Frontend: http://localhost:${PORT}`);
   console.log('=================================');

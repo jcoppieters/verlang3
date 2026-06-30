@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import { config } from '../config/conf';
 
-dotenv.config();
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = config.jwt.secret;
 
 export interface UserPayload {
   id: number;
@@ -68,6 +66,6 @@ export function generateToken(user: { id: number; username: string; name: string
       name: user.name
     },
     JWT_SECRET,
-    { expiresIn: '7 days' }
+    { expiresIn: config.jwt.expiresIn as any }
   );
 }

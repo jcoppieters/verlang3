@@ -1,16 +1,14 @@
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { config } from '../config/conf';
 
 // Create reusable transporter
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true',
+  host: config.smtp.host,
+  port: config.smtp.port,
+  secure: config.smtp.secure,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD
+    user: config.smtp.user,
+    pass: config.smtp.password
   }
 });
 
@@ -34,7 +32,7 @@ interface EmailOptions {
 export async function sendEmail(options: EmailOptions): Promise<boolean> {
   try {
     const mailOptions = {
-      from: `${process.env.SMTP_FROM_NAME || 'Verlanglijstje'} <${process.env.SMTP_FROM}>`,
+      from: `${config.smtp.fromName} <${config.smtp.from}>`,
       to: options.to,
       subject: options.subject,
       text: options.text,
@@ -60,7 +58,7 @@ export async function sendWelcomeEmail(to: string, name: string): Promise<boolea
 
 // Send password reset email
 export async function sendPasswordResetEmail(to: string, name: string, resetToken: string): Promise<boolean> {
-  const resetUrl = `${process.env.APP_URL || 'http://localhost:3000'}/#/reset-password?token=${resetToken}`;
+  const resetUrl = `${config.server.appUrl}/#/reset-password?token=${resetToken}`;
   const subject = 'Password Reset Request';
   const text = `Dear ${name},\n\nYou requested to reset your password.\n\nClick the link below to reset your password:\n${resetUrl}\n\nIf you didn't request this, please ignore this email.\n\nBest regards,\nThe Verlanglijstje Team`;
   

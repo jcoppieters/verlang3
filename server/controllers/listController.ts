@@ -3,6 +3,7 @@ import { AuthRequest } from '../middleware/auth';
 import { query, queryOne, insert, execute } from '../config/database';
 import { encodeShareId } from '../utils/helpers';
 import { sendShareEmail } from '../utils/email';
+import { config } from '../config/conf';
 
 interface List {
   id: number;
@@ -427,7 +428,7 @@ export async function shareList(req: AuthRequest, res: Response): Promise<void> 
 
     // Generate share URL
     const encodedId = encodeShareId(listId);
-    const shareUrl = `${process.env.APP_URL || 'http://localhost:3000'}/#/share/${encodedId}`;
+    const shareUrl = `${config.server.appUrl}/#/share/${encodedId}`;
 
     // Send email
     const emailSent = await sendShareEmail(

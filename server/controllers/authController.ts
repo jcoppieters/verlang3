@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { AuthRequest } from '../middleware/auth';
 import { query, queryOne, insert } from '../config/database';
 import { generateToken } from '../middleware/auth';
+import { config } from '../config/conf';
 
 interface User {
   id: number;
@@ -15,7 +16,7 @@ interface User {
   lastlogin: Date | null;
 }
 
-const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS || '10');
+const BCRYPT_ROUNDS = config.bcrypt.rounds;
 
 // Register new user
 export async function register(req: AuthRequest, res: Response): Promise<void> {
