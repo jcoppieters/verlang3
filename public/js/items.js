@@ -554,6 +554,12 @@ function donateItem(itemId, itemName) {
           <div class="modal-body">
             <p class="mb-4">You're about to mark <strong>"${escapeHtml(itemName)}"</strong> as donated.</p>
             
+            <div class="form-group">
+              <label class="label" for="donateShowFrom">Show from date (optional)</label>
+              <input type="date" id="donateShowFrom" name="showfrom" class="input" />
+              <p class="text-small text-muted" style="margin-top: var(--space-1);">When should this donation be revealed to the list owner?</p>
+            </div>
+            
             <div class="form-group mb-0">
               <label class="label" for="donateComment">Add a comment (optional)</label>
               <textarea id="donateComment" name="comment" class="textarea" placeholder="Leave a message..."></textarea>
@@ -579,13 +585,21 @@ async function handleDonateItem(e) {
   e.preventDefault();
   
   const itemId = e.target.dataset.itemId;
+  const formData = new FormData(e.target);
+  const showfrom = formData.get('showfrom');
+  const comment = formData.get('comment');
+  
+  const data = {
+    comment: comment || '',
+    showfrom: showfrom || null
+  };
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
   submitBtn.innerHTML = '<span class="loading-inline"></span> Processing...';
   
   try {
-    const response = await itemsAPI.donate(itemId);
+    const response = await itemsAPI.donate(itemId, data);
     
     if (response.success) {
       ui.showToast('Thank you! Item marked as donated 🎁', 'success');

@@ -223,9 +223,10 @@ const itemsAPI = {
   },
   
   // Donate item
-  donate: async (itemId) => {
+  donate: async (itemId, data = {}) => {
     return apiRequest(`/items/${itemId}/donate`, {
       method: 'POST',
+      body: JSON.stringify(data),
     });
   },
   

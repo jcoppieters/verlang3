@@ -297,7 +297,7 @@ export async function donateItem(req: AuthRequest, res: Response): Promise<void>
     }
 
     const itemId = parseInt(req.params.id);
-    const { comment = '' } = req.body;
+    const { comment = '', showfrom = null } = req.body;
 
     // Get item
     const item = await queryOne<Item>(
@@ -344,9 +344,9 @@ export async function donateItem(req: AuthRequest, res: Response): Promise<void>
     // Mark as donated
     await execute(
       `UPDATE items 
-       SET status = 'S', givenby = ?, givencomment = ?, givenat = NOW()
+       SET status = 'S', givenby = ?, givencomment = ?, givenat = NOW(), showfrom = ?
        WHERE id = ?`,
-      [req.user.id, comment, itemId]
+      [req.user.id, comment, showfrom || null, itemId]
     );
 
     const updatedItem = await queryOne<Item>(
