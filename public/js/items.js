@@ -91,7 +91,10 @@ async function renderListDetailPage(listId) {
  * Render item card
  */
 function renderItemCard(item, isOwner) {
-  const statusBadge = !isOwner ? getStatusBadge(item.status) : '';
+  // For owner: show badge only if shown === 'T' (showfrom date has passed)
+  // For non-owner: always show badge
+  const statusBadge = !isOwner ? getStatusBadge(item.status) : 
+                      (item.shown === 'T' ? getStatusBadge(item.status) : '');
   const canInteract = !isOwner && item.status === 'A';
   
   return `
@@ -130,7 +133,7 @@ function renderItemCard(item, isOwner) {
           </p>
         ` : ''}
         
-        ${isOwner && item.status === 'S' && item.username ? `
+        ${isOwner && item.status === 'S' && item.shown === 'T' && item.username ? `
           <p class="text-small" style="color: var(--color-success); margin-top: var(--space-2);">
             ${t('donated_by')} ${escapeHtml(item.username)}
             ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
@@ -168,7 +171,7 @@ function renderItemCard(item, isOwner) {
               </p>
             ` : ''}
             
-            ${isOwner && item.status === 'S' && item.username ? `
+            ${isOwner && item.status === 'S' && item.shown === 'T' && item.username ? `
               <p class="text-small" style="color: var(--color-success);">
                 ${t('donated_by')} ${escapeHtml(item.username)}
                 ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
@@ -191,8 +194,8 @@ function renderItemCard(item, isOwner) {
  */
 function getStatusBadge(status) {
   const badges = {
-    'R': '<span class="badge badge-warning">Reserved</span>',
-    'S': '<span class="badge badge-secondary">Donated</span>',
+    'R': `<span class="badge badge-warning">${t('reserved')}</span>`,
+    'S': `<span class="badge badge-secondary">${t('donated')}</span>`,
   };
   return badges[status] || '';
 }
