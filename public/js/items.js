@@ -939,6 +939,12 @@ function handleDragEnd(e) {
  * Touch event handlers for mobile
  */
 function handleTouchStart(e) {
+  // Don't start drag if touching a button, link, or input
+  const target = e.target;
+  if (target.closest('button') || target.closest('a') || target.closest('input') || target.closest('textarea')) {
+    return;
+  }
+  
   draggedElement = e.currentTarget;
   touchStartY = e.touches[0].clientY;
   
