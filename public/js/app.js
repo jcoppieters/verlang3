@@ -131,9 +131,7 @@ const router = {
       
       // Update navbar translations
       const searchLink = navbar.querySelector('a[href="#/search"]');
-      const logoutBtn = document.getElementById('logoutBtn');
       if (searchLink) searchLink.textContent = t('search');
-      if (logoutBtn) logoutBtn.textContent = t('logout');
     } else {
       navbar.style.display = 'none';
     }
@@ -234,15 +232,6 @@ function renderHomePage() {
 async function initApp() {
   // Initialize i18n first
   await i18n.init();
-  
-  // Setup logout button
-  const logoutBtn = document.getElementById('logoutBtn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      authAPI.logout();
-    });
-  }
   
   // Initialize router
   router.init();

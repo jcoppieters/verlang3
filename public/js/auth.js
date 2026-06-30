@@ -261,22 +261,23 @@ async function handleRegister(e) {
  */
 function renderProfilePage() {
   const user = ui.getCurrentUser();
+  const currentLang = i18n.getCurrentLanguage();
   
   const main = document.getElementById('mainContent');
   main.innerHTML = `
     <div class="container" style="max-width: 800px;">
       <h1 class="mb-6" style="font-size: var(--text-3xl); font-weight: var(--font-bold);">
-        My Profile
+        ${t('my_profile')}
       </h1>
       
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">Profile Information</h2>
+          <h2 class="card-title">${t('profile_information')}</h2>
         </div>
         
         <form id="profileForm">
           <div class="form-group">
-            <label class="label" for="profileName">Full Name</label>
+            <label class="label" for="profileName">${t('full_name_label')}</label>
             <input 
               type="text" 
               id="profileName" 
@@ -288,7 +289,7 @@ function renderProfilePage() {
           </div>
           
           <div class="form-group">
-            <label class="label" for="profileUsername">Username</label>
+            <label class="label" for="profileUsername">${t('username_label')}</label>
             <input 
               type="text" 
               id="profileUsername" 
@@ -298,13 +299,13 @@ function renderProfilePage() {
               required 
               readonly
               style="background-color: var(--color-bg-tertiary); cursor: not-allowed;"
-              title="Username cannot be changed"
+              title="${t('username_cannot_change')}"
             />
-            <span class="text-small text-muted">Username cannot be changed</span>
+            <span class="text-small text-muted">${t('username_cannot_change')}</span>
           </div>
           
           <div class="form-group">
-            <label class="label" for="profileEmail">Email</label>
+            <label class="label" for="profileEmail">${t('email_label')}</label>
             <input 
               type="email" 
               id="profileEmail" 
@@ -316,26 +317,49 @@ function renderProfilePage() {
           </div>
           
           <div class="form-group">
-            <label class="label" for="profilePassword">Password (leave empty to keep current)</label>
+            <label class="label" for="profileLanguage">${t('language')}</label>
+            <select 
+              id="profileLanguage" 
+              name="language" 
+              class="input"
+            >
+              <option value="NL" ${currentLang === 'NL' ? 'selected' : ''}>Nederlands</option>
+              <option value="FR" ${currentLang === 'FR' ? 'selected' : ''}>Français</option>
+              <option value="EN" ${currentLang === 'EN' ? 'selected' : ''}>English</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="label" for="profilePassword">${t('password_label')}</label>
             <input 
               type="password" 
               id="profilePassword" 
               name="password" 
               class="input" 
               autocomplete="new-password"
-              placeholder="Enter new password or leave empty"
+              placeholder="${t('password_placeholder')}"
             />
-            <span class="text-small text-muted">Only fill this field if you want to change your password</span>
+            <span class="text-small text-muted">${t('password_hint')}</span>
           </div>
           
           <div class="card-footer">
-            <div class="flex gap-3">
-              <button type="submit" class="btn btn-primary">
-                Save Changes
-              </button>
-              <button type="button" class="btn btn-secondary" onclick="window.location.hash='#/lists'">
-                Cancel
-              </button>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: var(--space-3);">
+              <div style="display: flex; gap: var(--space-3);">
+                <button type="submit" class="btn btn-primary">
+                  ${t('save_changes')}
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="window.location.hash='#/lists'">
+                  ${t('cancel')}
+                </button>
+              </div>
+              <div style="display: flex; gap: var(--space-3);">
+                <button type="button" class="btn btn-secondary" onclick="authAPI.logout()">
+                  ${t('logout')}
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="showForgetMeComingSoon()" title="${t('forget_about_me_desc')}">
+                  ${t('forget_about_me')}
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -355,16 +379,19 @@ async function handleProfileUpdate(e) {
   
   const formData = new FormData(e.target);
   const password = formData.get('password')?.trim();
+  const newLanguage = formData.get('language');
+  const currentLanguage = i18n.getCurrentLanguage();
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
   submitBtn.innerHTML = '<span class="loading-inline"></span> Saving...';
   
   try {
-    // Update profile (name, email)
+    // Update profile (name, email, language)
     const userData = {
       name: formData.get('name').trim(),
       email: formData.get('email').trim(),
+      language: newLanguage
     };
     
     const profileResponse = await authAPI.updateProfile(userData);
@@ -384,9 +411,9 @@ async function handleProfileUpdate(e) {
         throw new Error(passwordResponse.error || 'Failed to update password');
       }
       
-      ui.showToast('Profile and password updated successfully', 'success');
+      ui.showToast(t('profile_and_password_updated'), 'success');
     } else {
-      ui.showToast('Profile updated successfully', 'success');
+      ui.showToast(t('profile_updated'), 'success');
     }
     
     // Update navbar
@@ -395,12 +422,28 @@ async function handleProfileUpdate(e) {
     // Clear password field
     document.getElementById('profilePassword').value = '';
     
+    // If language changed, update and reload
+    if (newLanguage !== currentLanguage) {
+      i18n.setLanguage(newLanguage);
+      // Reload page after short delay to show success message
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    }
+    
   } catch (error) {
     ui.showToast(error.message || 'Failed to update profile', 'error');
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Save Changes';
+    submitBtn.textContent = t('save_changes');
   }
+}
+
+/**
+ * Show coming soon toast for forget me feature
+ */
+function showForgetMeComingSoon() {
+  ui.showToast(t('coming_soon'), 'info');
 }
 
 /**

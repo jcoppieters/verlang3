@@ -49,6 +49,16 @@
   - [ ] Update user profile
   - [ ] Update password
   - [ ] Account settings
+  - [ ] **"Forget About Me" - GDPR Data Deletion**
+    - [ ] Create endpoint to delete all user data
+    - [ ] Delete user's lists
+    - [ ] Delete user's items
+    - [ ] Remove user from followers of other lists
+    - [ ] Delete user's reservations/donations
+    - [ ] Delete user account
+    - [ ] Send confirmation email
+    - [ ] Add confirmation dialog with warning
+    - [ ] Implement 30-day grace period option
 - [ ] Create user routes
 
 ### List Management
