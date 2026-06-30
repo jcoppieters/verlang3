@@ -246,7 +246,8 @@ async function handleCreateList(e) {
     if (response.success) {
       ui.showToast('List created successfully!', 'success');
       closeModal();
-      renderListsPage();
+      // Reload to show the new list
+      window.location.reload();
     }
   } catch (error) {
     ui.showToast(error.message || 'Failed to create list', 'error');
@@ -318,15 +319,8 @@ async function handleEditList(e) {
     if (response.success) {
       ui.showToast('List updated successfully!', 'success');
       closeModal();
-      // Reload current page instead of navigating away
-      const currentHash = window.location.hash;
-      if (currentHash.includes('/lists/')) {
-        // On list detail page - reload it
-        window.location.reload();
-      } else {
-        // On lists overview - reload it
-        renderListsPage();
-      }
+      // Always reload to refresh the list data
+      window.location.reload();
     }
   } catch (error) {
     ui.showToast(error.message || 'Failed to update list', 'error');
@@ -369,7 +363,8 @@ async function unfollowList(id, name) {
     
     if (response.success) {
       ui.showToast('Unfollowed successfully', 'success');
-      renderListsPage();
+      // Reload to refresh the lists
+      window.location.reload();
     }
   } catch (error) {
     ui.showToast(error.message || 'Failed to unfollow', 'error');

@@ -9,7 +9,7 @@ function renderLoginPage() {
   const main = document.getElementById('mainContent');
   main.innerHTML = `
     <div class="container" style="max-width: 480px; margin-top: 60px;">
-      <div class="card">
+      <div class="card auth-card">
         <div class="text-center mb-6">
           <div style="font-size: 3rem; margin-bottom: 1rem;">🎁</div>
           <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0.5rem;">
@@ -110,7 +110,7 @@ function renderRegisterPage() {
   const main = document.getElementById('mainContent');
   main.innerHTML = `
     <div class="container" style="max-width: 480px; margin-top: 40px;">
-      <div class="card">
+      <div class="card auth-card">
         <div class="text-center mb-6">
           <div style="font-size: 3rem; margin-bottom: 1rem;">🎁</div>
           <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0.5rem;">

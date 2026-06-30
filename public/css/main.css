@@ -513,29 +513,29 @@ button {
     padding: var(--space-4);
   }
   
-  body > #app > .app-layout > .main-content > .container .card {
-    padding: var(--space-8);
-    min-height: 70vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  .auth-card {
+    padding: var(--space-8) !important;
+    min-height: 70vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
   }
   
-  body > #app > .app-layout > .main-content > .container .card .form-group {
+  .auth-card .form-group {
     margin-bottom: var(--space-6);
   }
   
-  body > #app > .app-layout > .main-content > .container .card .input {
+  .auth-card .input {
     padding: var(--space-4);
     font-size: var(--text-lg);
   }
   
-  body > #app > .app-layout > .main-content > .container .card .btn-lg {
+  .auth-card .btn-lg {
     padding: var(--space-4);
     font-size: var(--text-lg);
   }
   
-  body > #app > .app-layout > .main-content > .container .card h1 {
+  .auth-card h1 {
     font-size: var(--text-4xl) !important;
   }
 }
@@ -1077,13 +1077,14 @@ button {
     padding: var(--space-2) 0;
   }
   
-  /* Reduce sidebar padding on mobile - starts at very top */
+  /* Sidebar on mobile - starts below navbar */
   .sidebar {
-    padding-top: 0;
+    top: 64px;
+    height: calc(100vh - 64px);
   }
   
   .sidebar-content {
-    padding: var(--space-1) var(--space-2) var(--space-2) var(--space-2);
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-2);
   }
   
   .flex.justify-between.items-start {
