@@ -30,7 +30,7 @@ export async function addItem(req: AuthRequest, res: Response): Promise<void> {
     }
 
     const listId = parseInt(req.params.listId);
-    const { name, url = '', description = '', price = '', priority = 1, showfrom = null } = req.body;
+    const { name, url = '', description = '', price = '', showfrom = null } = req.body;
 
     // Check list ownership
     const list = await queryOne(
@@ -54,11 +54,18 @@ export async function addItem(req: AuthRequest, res: Response): Promise<void> {
       return;
     }
 
+    // Get max priority to add new item at top
+    const maxPriorityResult = await queryOne<{ maxPriority: number | null }>(
+      'SELECT MAX(priority) as maxPriority FROM items WHERE list = ?',
+      [listId]
+    );
+    const newPriority = (maxPriorityResult?.maxPriority || 0) + 1;
+
     // Insert item
     const itemId = await insert(
       `INSERT INTO items (list, name, url, description, price, priority, showfrom, status)
        VALUES (?, ?, ?, ?, ?, ?, ?, 'A')`,
-      [listId, name, url, description, price, priority, showfrom]
+      [listId, name, url, description, price, newPriority, showfrom]
     );
 
     // Update list lastupdate

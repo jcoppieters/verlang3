@@ -793,15 +793,23 @@ async function handleSearch(e) {
     const hasResults = Object.keys(grouped).length > 0;
     
     resultsContainer.innerHTML = hasResults ? `
+      <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); color: #E85D4A; margin-bottom: var(--space-6);">
+        Gezocht op: ${escapeHtml(query)}
+      </h2>
+      <p class="text-muted mb-4">Klik op de naam van een lijstje om het bij te voegen bij de lijstjes die je volgt.</p>
       <div class="grid grid-cols-1" style="gap: var(--space-6);">
         ${Object.entries(grouped).map(([userId, userData]) => `
           <div>
-            <h2 class="mb-3" style="font-size: var(--text-xl); font-weight: var(--font-semibold); color: var(--color-text-primary);">
+            <div style="font-size: var(--text-lg); font-weight: var(--font-semibold); margin-bottom: var(--space-3);">
               ${escapeHtml(userData.name)}
-            </h2>
+            </div>
             ${userData.lists.length > 0 ? `
-              <div class="grid grid-cols-1" style="gap: var(--space-3); margin-left: var(--space-4);">
-                ${userData.lists.map(renderListResult).join('')}
+              <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-left: var(--space-4);">
+                ${userData.lists.map(list => `
+                  <button class="btn btn-secondary btn-sm" onclick="followListFromSearch(${list.id})" style="display: inline-flex; align-items: center; gap: var(--space-1);">
+                    <span style="font-size: 1.2em;">+</span> ${escapeHtml(list.name)}
+                  </button>
+                `).join('')}
               </div>
             ` : `
               <p class="text-muted" style="margin-left: var(--space-4);">No public lists</p>
@@ -819,23 +827,6 @@ async function handleSearch(e) {
   } catch (error) {
     resultsContainer.innerHTML = `<p class="text-danger">${error.message}</p>`;
   }
-}
-
-/**
- * Render list search result
- */
-function renderListResult(list) {
-  return `
-    <div class="card" style="padding: var(--space-3);">
-      <div class="flex justify-between items-start">
-        <div style="flex: 1;">
-          <h3 class="card-title mb-1" style="font-size: var(--text-base);">${escapeHtml(list.name)}</h3>
-          <p class="text-small text-muted">${list.itemCount || 0} items</p>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="followListFromSearch(${list.id})">Follow</button>
-      </div>
-    </div>
-  `;
 }
 
 /**
