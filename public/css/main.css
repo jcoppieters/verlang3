@@ -296,6 +296,17 @@ button {
   background-color: #45b869;
 }
 
+.btn-blue {
+  background-color: #3498db;
+  color: var(--color-text-white);
+}
+
+.btn-blue:hover:not(:disabled) {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
 .btn-text {
   background: none;
   color: var(--color-primary);
@@ -491,6 +502,57 @@ button {
 /* Adjust card padding when draggable */
 .item-card[draggable="true"] {
   padding-left: calc(var(--space-6) + 2rem);
+}
+
+/* ============================================
+   ITEM CARD LAYOUTS (Mobile/Desktop)
+   ============================================ */
+/* Show desktop layout by default, hide mobile */
+.item-card-mobile {
+  display: none;
+}
+
+.item-card-desktop {
+  display: block;
+}
+
+/* Mobile layout */
+@media (max-width: 767px) {
+  .item-card-mobile {
+    display: block;
+  }
+  
+  .item-card-desktop {
+    display: none;
+  }
+  
+  .item-header-mobile {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+  
+  .item-actions-mobile {
+    display: flex;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+  
+  .item-actions-mobile .btn {
+    min-width: auto;
+    padding: var(--space-2) var(--space-3);
+  }
+  
+  .item-footer-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
 }
 
 /* Mobile adjustments for drag handle */

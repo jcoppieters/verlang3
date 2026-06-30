@@ -345,7 +345,7 @@ function renderProfilePage() {
           <div class="card-footer">
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: var(--space-3);">
               <div style="display: flex; gap: var(--space-3);">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-blue">
                   ${t('save_changes')}
                 </button>
                 <button type="button" class="btn btn-secondary" onclick="window.location.hash='#/lists'">

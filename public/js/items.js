@@ -97,45 +97,89 @@ function renderItemCard(item, isOwner) {
   return `
     <div class="card item-card" ${isOwner ? `draggable="true" data-item-id="${item.id}" data-item-priority="${item.priority || 50}"` : ''}>
       ${isOwner ? '<div class="drag-handle">⋮⋮</div>' : ''}
-      <div class="flex justify-between items-start gap-4">
-        <!-- Item Details -->
-        <div style="flex: 1;">
-          <div class="flex items-start justify-between gap-3 mb-2">
-            <h3 class="card-title" style="flex: 1;">${escapeHtml(item.name)}</h3>
-            ${statusBadge}
+      
+      <!-- Mobile Layout -->
+      <div class="item-card-mobile">
+        <div class="item-header-mobile">
+          <h3 class="card-title" style="flex: 1; margin-bottom: 0;">${escapeHtml(item.name)}</h3>
+          <div class="item-actions-mobile">
+            ${isOwner ? renderOwnerActions(item) : renderGuestActions(item, canInteract)}
           </div>
-          
-          ${item.description ? `<p class="text-muted mb-3">${escapeHtml(item.description)}</p>` : ''}
-          
-          <div class="flex gap-4 text-small text-muted mb-3">
-            ${item.url ? `<a href="${escapeHtml(item.url)}" target="_blank" class="text-primary">🔗 Link</a>` : ''}
-            ${item.price ? `<span>💰 €${item.price}</span>` : ''}
-          </div>
-          
-          ${!isOwner && item.status === 'R' && item.username ? `
-            <p class="text-small" style="color: var(--color-warning);">
-              Reserved by ${escapeHtml(item.username)}
-            </p>
-          ` : ''}
-          
-          ${!isOwner && item.status === 'S' && item.username ? `
-            <p class="text-small" style="color: var(--color-success);">
-              Donated by ${escapeHtml(item.username)}
-              ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
-            </p>
-          ` : ''}
-          
-          ${isOwner && item.status === 'S' && item.username ? `
-            <p class="text-small" style="color: var(--color-success);">
-              Donated by ${escapeHtml(item.username)}
-              ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
-            </p>
-          ` : ''}
         </div>
         
-        <!-- Action Buttons -->
-        <div class="flex flex-column gap-2">
-          ${isOwner ? renderOwnerActions(item) : renderGuestActions(item, canInteract)}
+        ${item.description ? `<p class="text-muted mb-3">${escapeHtml(item.description)}</p>` : ''}
+        
+        <div class="item-footer-mobile">
+          <div class="flex gap-4 text-small text-muted">
+            ${item.url ? `<a href="${escapeHtml(item.url)}" target="_blank" class="text-primary">🔗 ${t('link')}</a>` : ''}
+            ${item.price ? `<span>💰 €${item.price}</span>` : ''}
+          </div>
+          ${statusBadge ? `<div>${statusBadge}</div>` : ''}
+        </div>
+        
+        ${!isOwner && item.status === 'R' && item.username ? `
+          <p class="text-small" style="color: var(--color-warning); margin-top: var(--space-2);">
+            ${t('reserved_by')} ${escapeHtml(item.username)}
+          </p>
+        ` : ''}
+        
+        ${!isOwner && item.status === 'S' && item.username ? `
+          <p class="text-small" style="color: var(--color-success); margin-top: var(--space-2);">
+            ${t('donated_by')} ${escapeHtml(item.username)}
+            ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
+          </p>
+        ` : ''}
+        
+        ${isOwner && item.status === 'S' && item.username ? `
+          <p class="text-small" style="color: var(--color-success); margin-top: var(--space-2);">
+            ${t('donated_by')} ${escapeHtml(item.username)}
+            ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
+          </p>
+        ` : ''}
+      </div>
+      
+      <!-- Desktop Layout -->
+      <div class="item-card-desktop">
+        <div class="flex justify-between items-start gap-4">
+          <!-- Item Details -->
+          <div style="flex: 1;">
+            <div class="flex items-start justify-between gap-3 mb-2">
+              <h3 class="card-title" style="flex: 1;">${escapeHtml(item.name)}</h3>
+              ${statusBadge}
+            </div>
+            
+            ${item.description ? `<p class="text-muted mb-3">${escapeHtml(item.description)}</p>` : ''}
+            
+            <div class="flex gap-4 text-small text-muted mb-3">
+              ${item.url ? `<a href="${escapeHtml(item.url)}" target="_blank" class="text-primary">🔗 ${t('link')}</a>` : ''}
+              ${item.price ? `<span>💰 €${item.price}</span>` : ''}
+            </div>
+            
+            ${!isOwner && item.status === 'R' && item.username ? `
+              <p class="text-small" style="color: var(--color-warning);">
+                ${t('reserved_by')} ${escapeHtml(item.username)}
+              </p>
+            ` : ''}
+            
+            ${!isOwner && item.status === 'S' && item.username ? `
+              <p class="text-small" style="color: var(--color-success);">
+                ${t('donated_by')} ${escapeHtml(item.username)}
+                ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
+              </p>
+            ` : ''}
+            
+            ${isOwner && item.status === 'S' && item.username ? `
+              <p class="text-small" style="color: var(--color-success);">
+                ${t('donated_by')} ${escapeHtml(item.username)}
+                ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
+              </p>
+            ` : ''}
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="flex flex-column gap-2">
+            ${isOwner ? renderOwnerActions(item) : renderGuestActions(item, canInteract)}
+          </div>
         </div>
       </div>
     </div>
@@ -157,7 +201,7 @@ function getStatusBadge(status) {
  * Render owner action buttons
  */
 function renderOwnerActions(item) {
-  let html = `<button class="btn btn-sm btn-secondary" onclick="showEditItemModal(${item.id})" title="Edit">✏️ Edit</button>`;
+  let html = `<button class="btn btn-sm btn-secondary" onclick="showEditItemModal(${item.id})" title="${t('edit')}">✏️ ${t('edit')}</button>`;
   
   // Show donated status if item is donated
   if (item.status === 'S') {
@@ -178,10 +222,10 @@ function renderGuestActions(item, canInteract) {
   if (item.status === 'A') {
     return `
       <button class="btn btn-sm btn-warning" onclick="reserveItem(${item.id}, '${escapeHtml(item.name)}')">
-        Reserve
+        ${t('mark_as_reserved')}
       </button>
       <button class="btn btn-sm btn-success" onclick="donateItem(${item.id}, '${escapeHtml(item.name)}')">
-        Donate
+        ${t('mark_as_donated')}
       </button>
     `;
   }
@@ -190,10 +234,10 @@ function renderGuestActions(item, canInteract) {
   if (isReservedByMe) {
     return `
       <button class="btn btn-sm btn-success" onclick="donateItem(${item.id}, '${escapeHtml(item.name)}')">
-        Donate
+        ${t('mark_as_donated')}
       </button>
       <button class="btn btn-sm btn-secondary" onclick="takebackItem(${item.id})">
-        Take Back
+        ${t('unmark')}
       </button>
     `;
   }
@@ -355,8 +399,8 @@ function showAddItemModal(listId) {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary">Add Item</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="submit" class="btn btn-blue">${t('add')}</button>
           </div>
         </form>
       </div>
@@ -454,11 +498,11 @@ async function showEditItemModal(itemId) {
             
             <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
               <button type="button" class="btn btn-danger" onclick="deleteItemFromModal(${itemId}, '${escapeHtml(item.name)}')">
-                Delete
+                ${t('delete')}
               </button>
               <div style="display: flex; gap: var(--space-2);">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+                <button type="submit" class="btn btn-blue">${t('save')}</button>
               </div>
             </div>
           </form>
@@ -585,8 +629,8 @@ function donateItem(itemId, itemName) {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-            <button type="submit" class="btn btn-success">Confirm Donation</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="submit" class="btn btn-success">${t('mark_as_donated')}</button>
           </div>
         </form>
       </div>
@@ -656,8 +700,8 @@ function reserveItem(itemId, itemName) {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-            <button type="submit" class="btn btn-warning">Reserve Item</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="submit" class="btn btn-warning">${t('mark_as_reserved')}</button>
           </div>
         </form>
       </div>
@@ -725,7 +769,7 @@ async function renderSearchPage() {
         <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0;">
           Search
         </h1>
-        <button class="btn btn-secondary btn-sm mobile-only" onclick="window.history.back()">Cancel</button>
+        <button class="btn btn-secondary btn-sm mobile-only" onclick="window.history.back()">${t('cancel')}</button>
       </div>
       
       <div class="card mb-6">
@@ -740,7 +784,7 @@ async function renderSearchPage() {
               required
               style="flex: 1;"
             />
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-primary">${t('search')}</button>
           </div>
         </form>
       </div>

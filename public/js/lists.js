@@ -213,8 +213,8 @@ function showCreateListModal() {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary">Create List</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="submit" class="btn btn-blue">${t('create_list')}</button>
           </div>
         </form>
       </div>
@@ -285,9 +285,9 @@ function editList(id, name, isPublic) {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" onclick="deleteList(${id}, '${escapeHtml(name)}'); closeModal();" style="margin-right: auto;">🗑️ Delete List</button>
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" class="btn btn-danger" onclick="deleteList(${id}, '${escapeHtml(name)}'); closeModal();" style="margin-right: auto;">🗑️ ${t('delete_list')}</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="submit" class="btn btn-blue">${t('save')}</button>
           </div>
         </form>
       </div>
@@ -399,8 +399,8 @@ function shareListModal(id, name) {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-            <button type="submit" class="btn btn-primary">Send Email</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="submit" class="btn btn-blue">${t('send_invitation')}</button>
           </div>
         </form>
       </div>
