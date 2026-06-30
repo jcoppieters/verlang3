@@ -1076,6 +1076,17 @@ button {
   .sidebar-content {
     padding: var(--space-2) var(--space-2) var(--space-2) var(--space-2);
   }
+  
+  /* Keep list header items inline on mobile */
+  .list-header {
+    align-items: center;
+    gap: var(--space-2);
+  }
+  
+  /* Prevent edit button from growing */
+  .list-edit-btn {
+    flex: 0 0 auto !important;
+  }
 }
 
 .mobile-only {

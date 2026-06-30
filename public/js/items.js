@@ -32,7 +32,7 @@ async function renderListDetailPage(listId) {
       <div class="container">
         <!-- Header -->
         <div class="mb-6">
-          <div class="flex justify-between items-start mb-4">
+          <div class="flex justify-between items-start mb-4 list-header">
             <div class="flex items-center gap-3" style="flex: 1;">
               <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0;">
                 ${escapeHtml(list.name)}
@@ -44,7 +44,7 @@ async function renderListDetailPage(listId) {
               ` : ''}
             </div>
             ${isOwner ? `
-              <button class="btn btn-sm btn-secondary" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="Edit List" style="min-width: 90px;">
+              <button class="btn btn-sm btn-secondary list-edit-btn" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="Edit List" style="min-width: 90px;">
                 ✏️ Edit
               </button>
             ` : ''}
