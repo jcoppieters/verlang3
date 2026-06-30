@@ -18,12 +18,21 @@ async function renderListDetailPage(listId) {
     const { list, items } = response;
     const isOwner = list.isOwner;
     
+    // Format last update date
+    const lastUpdate = list.lastupdate ? new Date(list.lastupdate).toLocaleString('nl-NL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }) : '';
+    
     const main = document.getElementById('mainContent');
     main.innerHTML = `
       <div class="container">
         <!-- Header -->
         <div class="mb-6">
-          <div class="flex justify-between items-start">
+          <div class="flex justify-between items-start mb-4">
             <div class="flex items-center gap-3" style="flex: 1;">
               <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0;">
                 ${escapeHtml(list.name)}
@@ -34,11 +43,22 @@ async function renderListDetailPage(listId) {
                 </button>
               ` : ''}
             </div>
-            <p class="text-muted" style="margin-top: 0.5rem;">
-              ${isOwner ? 'Your list' : `by ${escapeHtml(list.ownerName)}`} • 
-              ${items.length} items
-            </p>
+            ${isOwner ? `
+              <div class="flex gap-2">
+                <button class="btn btn-sm btn-secondary" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="Edit List">
+                  ✏️ Edit
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="deleteList(${listId}, '${escapeHtml(list.name)}')" title="Delete List">
+                  🗑️ Delete
+                </button>
+              </div>
+            ` : ''}
           </div>
+          <p class="text-muted">
+            ${isOwner ? 'Your list' : `by ${escapeHtml(list.ownerName)}`} • 
+            ${items.length} item${items.length !== 1 ? 's' : ''}
+            ${lastUpdate ? `<br><span style="font-size: var(--text-sm);">Last update: ${lastUpdate}</span>` : ''}
+          </p>
         </div>
         
         <!-- Items Grid -->

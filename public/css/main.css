@@ -7,11 +7,11 @@
    CSS VARIABLES - DESIGN SYSTEM
    ============================================ */
 :root {
-  /* Primary Colors */
-  --color-primary: #4A90E2;
-  --color-primary-dark: #357ABD;
-  --color-primary-light: #6BA4E8;
-  --color-primary-pale: #E8F2FC;
+  /* Primary Colors - Warmer palette */
+  --color-primary: #E85D4A;
+  --color-primary-dark: #D44935;
+  --color-primary-light: #ED7563;
+  --color-primary-pale: #FFF0ED;
   
   /* Secondary Colors */
   --color-success: #50C878;
@@ -20,19 +20,21 @@
   --color-info: #3498DB;
   
   /* Text Colors */
-  --color-text-primary: #2C3E50;
-  --color-text-secondary: #7F8C8D;
-  --color-text-light: #95A5A6;
+  --color-text-primary: #333333;
+  --color-text-secondary: #666666;
+  --color-text-light: #999999;
   --color-text-white: #FFFFFF;
   
-  /* Background Colors */
-  --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: #F5F7FA;
-  --color-bg-tertiary: #ECF0F1;
+  /* Background Colors - Warmer cream tones */
+  --color-bg-primary: #FFFEF9;
+  --color-bg-secondary: #F5F3ED;
+  --color-bg-tertiary: #FFFACD;
+  --color-bg-item: #FFFEF5;
+  --color-bg-item-hover: #FFF9E6;
   
   /* Border Colors */
-  --color-border: #D5DBDE;
-  --color-border-light: #E8ECED;
+  --color-border: #E0DED5;
+  --color-border-light: #EAE8E0;
   
   /* Status Colors */
   --color-status-available: #50C878;
@@ -171,8 +173,9 @@ img {
 .navbar-content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 64px;
+  gap: var(--space-8);
 }
 
 .navbar-brand {
@@ -201,6 +204,7 @@ img {
   display: flex;
   align-items: center;
   gap: var(--space-4);
+  margin-left: auto;
 }
 
 .nav-link {
@@ -405,16 +409,18 @@ button {
    CARDS
    ============================================ */
 .card {
-  background-color: var(--color-bg-primary);
+  background-color: var(--color-bg-item);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   padding: var(--space-6);
   transition: all var(--transition-base);
+  border: 1px solid var(--color-border-light);
 }
 
 .card:hover {
   box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
+  background-color: var(--color-bg-item-hover);
 }
 
 .card-header {
@@ -860,10 +866,11 @@ button {
   width: 280px;
   background-color: var(--color-bg-primary);
   border-right: 1px solid var(--color-border-light);
-  height: calc(100vh - 64px);
+  height: 100vh;
   position: fixed;
   left: -280px;
-  top: 64px;
+  top: 0;
+  padding-top: 64px;
   transition: left var(--transition-base);
   overflow-y: auto;
   z-index: 90;
@@ -988,9 +995,10 @@ button {
   
   .sidebar {
     left: 0;
-    position: relative;
-    height: auto;
-    min-height: calc(100vh - 64px);
+    position: sticky;
+    height: 100vh;
+    top: 0;
+    padding-top: 64px;
   }
   
   .sidebar.open {
