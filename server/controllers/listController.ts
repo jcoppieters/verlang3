@@ -113,13 +113,33 @@ export async function getList(req: AuthRequest, res: Response): Promise<void> {
     const items = await query(
       `SELECT i.*, 
         IFNULL(u.name, i.givenname) as username,
-        IF(i.showfrom <= DATE(NOW()), 'T', 'F') as shown
+        IF(i.showfrom <= DATE(NOW()), 'T', 'F') as shown,
+        CASE
+          WHEN i.showfrom > DATE(NOW()) AND (i.status = 'S' OR i.status = 'R') THEN 'A'
+          ELSE i.status
+        END as displayStatus
        FROM items i
        LEFT JOIN users u ON i.givenby = u.id
        WHERE i.list = ?
        ORDER BY i.priority DESC, i.id DESC`,
       [listId]
     );
+
+    // For list owner, mask status if showfrom is in the future
+    // For the person who donated/reserved, show actual status
+    const processedItems = items.map((item: any) => {
+      if (isOwner && item.showfrom && new Date(item.showfrom) > new Date()) {
+        // Hide donation/reservation from owner until showfrom date
+        return {
+          ...item,
+          status: item.displayStatus,
+          givenby: item.displayStatus === 'A' ? null : item.givenby,
+          username: item.displayStatus === 'A' ? null : item.username,
+          givencomment: item.displayStatus === 'A' ? '' : item.givencomment
+        };
+      }
+      return item;
+    });
 
     res.json({
       success: true,
@@ -128,7 +148,7 @@ export async function getList(req: AuthRequest, res: Response): Promise<void> {
         isOwner,
         isFollowing: !!isFollowing
       },
-      items
+      items: processedItems
     });
   } catch (error) {
     console.error('Get list error:', error);
