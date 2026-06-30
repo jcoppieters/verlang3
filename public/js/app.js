@@ -273,8 +273,8 @@ async function loadSidebar() {
     // My Lists
     html += `
       <div class="sidebar-group">
-        <div class="sidebar-group-header">
-          <span class="sidebar-group-title">${t('my_lists')}</span>
+        <div class="sidebar-group-title">
+          <span>${t('my_lists')}</span>
           <button class="btn btn-sm btn-primary" onclick="showCreateListModal()">+ ${t('new')}</button>
         </div>
         ${myLists.length > 0 ? myLists.map(list => `
