@@ -126,6 +126,22 @@ const authAPI = {
       body: passwords,
     });
   },
+  
+  // Forgot password - request reset link
+  forgotPassword: async (email) => {
+    return apiRequest('/auth/forgot-password', {
+      method: 'POST',
+      body: { email },
+    });
+  },
+  
+  // Reset password with token
+  resetPassword: async (token, newPassword) => {
+    return apiRequest('/auth/reset-password', {
+      method: 'POST',
+      body: { token, newPassword },
+    });
+  },
 };
 
 /**

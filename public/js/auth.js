@@ -54,6 +54,9 @@ function renderLoginPage() {
           </div>
           
           <div class="text-center">
+            <p class="text-small">
+              <a href="#/forgot-password" class="text-primary">${t('forgot_password')}</a>
+            </p>
             <p class="text-small text-muted">
               ${t('dont_have_account')} 
               <a href="#/register" class="text-primary">${t('sign_up')}</a>
@@ -87,19 +90,19 @@ async function handleLogin(e) {
   // Disable submit button
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="loading-inline"></span> Signing in...';
+  submitBtn.innerHTML = `<span class="loading-inline"></span> ${t('signing_in')}`;
   
   try {
     const response = await authAPI.login(credentials);
     
     if (response.success) {
-      ui.showToast('Welcome back!', 'success');
+      ui.showToast(t('welcome_back'), 'success');
       window.location.hash = '#/lists';
     }
   } catch (error) {
-    ui.showToast(error.message || 'Login failed', 'error');
+    ui.showToast(error.message || t('login_failed'), 'error');
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Sign In';
+    submitBtn.textContent = t('sign_in');
   }
 }
 
@@ -444,6 +447,216 @@ async function handleProfileUpdate(e) {
  */
 function showForgetMeComingSoon() {
   ui.showToast(t('coming_soon'), 'info');
+}
+
+/**
+ * Render Forgot Password Page
+ */
+function renderForgotPasswordPage() {
+  const main = document.getElementById('mainContent');
+  main.innerHTML = `
+    <div class="container" style="max-width: 480px; margin-top: 60px;">
+      <div class="card auth-card">
+        <div class="text-center mb-6">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+          <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0.5rem;">
+            ${t('forgot_password_title')}
+          </h1>
+          <p class="text-muted">${t('forgot_password_description')}</p>
+        </div>
+        
+        <form id="forgotPasswordForm">
+          <div class="form-group">
+            <label class="label" for="email">${t('email')}</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="input" 
+              required 
+              autocomplete="email"
+              placeholder="${t('enter_email')}"
+            />
+            <span class="error-message" id="emailError"></span>
+          </div>
+          
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              ${t('send_reset_link')}
+            </button>
+          </div>
+          
+          <div class="text-center">
+            <p class="text-small">
+              <a href="#/login" class="text-primary">${t('back_to_login')}</a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('forgotPasswordForm').addEventListener('submit', handleForgotPassword);
+}
+
+/**
+ * Handle Forgot Password Form Submission
+ */
+async function handleForgotPassword(e) {
+  e.preventDefault();
+  
+  const formData = new FormData(e.target);
+  const email = formData.get('email').trim();
+  
+  document.getElementById('emailError').textContent = '';
+  
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `<span class="loading-inline"></span> ${t('sending')}`;
+  
+  try {
+    const response = await authAPI.forgotPassword(email);
+    
+    if (response.success) {
+      ui.showToast(t('reset_link_sent'), 'success');
+      // Clear the form
+      e.target.reset();
+      // Redirect to login after 2 seconds
+      setTimeout(() => {
+        window.location.hash = '#/login';
+      }, 2000);
+    }
+  } catch (error) {
+    ui.showToast(error.message || t('password_reset_failed'), 'error');
+    submitBtn.disabled = false;
+    submitBtn.textContent = t('send_reset_link');
+  }
+}
+
+/**
+ * Render Reset Password Page
+ */
+function renderResetPasswordPage() {
+  // Get token from URL query params
+  const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+  const token = urlParams.get('token');
+  
+  if (!token) {
+    ui.showToast(t('invalid_reset_token'), 'error');
+    window.location.hash = '#/login';
+    return;
+  }
+  
+  const main = document.getElementById('mainContent');
+  main.innerHTML = `
+    <div class="container" style="max-width: 480px; margin-top: 60px;">
+      <div class="card auth-card">
+        <div class="text-center mb-6">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🔑</div>
+          <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0.5rem;">
+            ${t('reset_password_title')}
+          </h1>
+          <p class="text-muted">${t('reset_password_description')}</p>
+        </div>
+        
+        <form id="resetPasswordForm" data-token="${escapeHtml(token)}">
+          <div class="form-group">
+            <label class="label" for="newPassword">${t('new_password')}</label>
+            <input 
+              type="password" 
+              id="newPassword" 
+              name="newPassword" 
+              class="input" 
+              required 
+              autocomplete="new-password"
+              placeholder="${t('enter_new_password')}"
+              minlength="6"
+            />
+            <span class="error-message" id="newPasswordError"></span>
+          </div>
+          
+          <div class="form-group">
+            <label class="label" for="confirmNewPassword">${t('confirm_new_password')}</label>
+            <input 
+              type="password" 
+              id="confirmNewPassword" 
+              name="confirmNewPassword" 
+              class="input" 
+              required 
+              autocomplete="new-password"
+              placeholder="${t('confirm_new_password')}"
+            />
+            <span class="error-message" id="confirmNewPasswordError"></span>
+          </div>
+          
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              ${t('reset_password_button')}
+            </button>
+          </div>
+          
+          <div class="text-center">
+            <p class="text-small">
+              <a href="#/login" class="text-primary">${t('back_to_login')}</a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('resetPasswordForm').addEventListener('submit', handleResetPassword);
+}
+
+/**
+ * Handle Reset Password Form Submission
+ */
+async function handleResetPassword(e) {
+  e.preventDefault();
+  
+  const token = e.target.dataset.token;
+  const formData = new FormData(e.target);
+  const newPassword = formData.get('newPassword');
+  const confirmNewPassword = formData.get('confirmNewPassword');
+  
+  // Clear errors
+  document.getElementById('newPasswordError').textContent = '';
+  document.getElementById('confirmNewPasswordError').textContent = '';
+  
+  // Validate passwords match
+  if (newPassword !== confirmNewPassword) {
+    document.getElementById('confirmNewPasswordError').textContent = t('passwords_do_not_match');
+    return;
+  }
+  
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = `<span class="loading-inline"></span> ${t('resetting_password')}`;
+  
+  try {
+    const response = await authAPI.resetPassword(token, newPassword);
+    
+    if (response.success) {
+      ui.showToast(t('password_reset_success'), 'success');
+      // Redirect to login after 1.5 seconds
+      setTimeout(() => {
+        window.location.hash = '#/login';
+      }, 1500);
+    }
+  } catch (error) {
+    const errorMessage = error.message || t('password_reset_failed');
+    ui.showToast(errorMessage, 'error');
+    
+    // If invalid token, redirect to login after showing error
+    if (errorMessage.includes('Invalid') || errorMessage.includes('expired')) {
+      setTimeout(() => {
+        window.location.hash = '#/login';
+      }, 2000);
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.textContent = t('reset_password_button');
+    }
+  }
 }
 
 /**

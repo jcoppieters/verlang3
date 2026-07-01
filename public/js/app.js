@@ -10,6 +10,8 @@ const router = {
     '/': renderHomePage,
     '/login': renderLoginPage,
     '/register': renderRegisterPage,
+    '/forgot-password': renderForgotPasswordPage,
+    '/reset-password': renderResetPasswordPage,
     '/profile': renderProfilePage,
     '/lists': renderListsPage,
     '/lists/:id': renderListDetailPage,
@@ -37,7 +39,7 @@ const router = {
     
     // Check authentication
     const isAuthenticated = ui.isAuthenticated();
-    const publicRoutes = ['/', '/login', '/register'];
+    const publicRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password'];
     
     if (!isAuthenticated && !publicRoutes.includes(route)) {
       // Redirect to login if not authenticated
