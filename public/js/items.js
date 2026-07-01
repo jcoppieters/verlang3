@@ -59,10 +59,14 @@ async function renderListDetailPage(listId) {
               ` : ''}
             </div>
             ${isOwner ? `
-              <button class="btn btn-sm btn-secondary list-edit-btn" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="Edit List" style="min-width: 90px;">
-                ✏️ Edit
+              <button class="btn btn-sm btn-secondary list-edit-btn" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="${t('edit')}" style="min-width: 90px;">
+                ✏️ ${t('edit')}
               </button>
-            ` : ''}
+            ` : `
+              <button class="btn btn-sm btn-secondary" onclick="unfollowList(${listId}, '${escapeHtml(list.name)}')" title="${t('unfollow')}" style="min-width: 90px;">
+                ✖ ${t('unfollow')}
+              </button>
+            `}
           </div>
           <p class="text-muted">
             ${isOwner ? 'Your list' : `by ${escapeHtml(list.ownerName)}`} • 

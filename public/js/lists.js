@@ -217,7 +217,7 @@ async function deleteList(id, name) {
  * Unfollow list
  */
 async function unfollowList(id, name) {
-  if (!confirm(`Stop following "${name}"?`)) {
+  if (!confirm(t('confirm_unfollow_list').replace('{name}', name))) {
     return;
   }
   
@@ -225,12 +225,12 @@ async function unfollowList(id, name) {
     const response = await listsAPI.unfollow(id);
     
     if (response.success) {
-      ui.showToast('Unfollowed successfully', 'success');
+      ui.showToast(t('unfollowed_successfully'), 'success');
       // Reload to refresh the lists
       window.location.reload();
     }
   } catch (error) {
-    ui.showToast(error.message || 'Failed to unfollow', 'error');
+    ui.showToast(error.message || t('failed_to_unfollow'), 'error');
   }
 }
 
