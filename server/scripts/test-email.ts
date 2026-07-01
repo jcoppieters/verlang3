@@ -140,7 +140,7 @@ async function testShareEmail(recipientEmail: string) {
 
 async function main() {
   log('\n╔════════════════════════════════════════════════╗', colors.cyan);
-  log('║   📧 Verlanglijstje Email Configuration Test  ║', colors.cyan);
+  log('║   📧 Verlanglijstje Email Configuration Test   ║', colors.cyan);
   log('╚════════════════════════════════════════════════╝', colors.cyan);
   
   printConfig();

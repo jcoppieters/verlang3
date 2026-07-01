@@ -64,6 +64,10 @@
     "welcome_to_app": "Welkom bij Verlanglijstje.be",
     "tagline": "Maak en deel verlanglijsten met vrienden en familie. Mis nooit meer het perfecte cadeau!",
     "get_started": "Start Nu",
+    "v3_splash_title": "🎉 Welkom bij de nieuwe versie!",
+    "v3_splash_message": "Na een lange tijd hebben we Verlanglijstje.be vernieuwd! Je kunt inloggen met dezelfde gebruikersnaam en wachtwoord als voorheen.",
+    "v3_splash_report": "Merk je een probleem of fout? Stuur ons gerust een e-mail naar",
+    "v3_splash_button": "Begrepen, bedankt!",
     "feature_create_title": "Maak Verlanglijsten",
     "feature_create_desc": "Organiseer je wensen in meerdere lijsten. Houd alles bij wat je wilt voor verjaardagen, feestdagen of speciale gelegenheden.",
     "feature_share_title": "Deel met Vrienden",
@@ -215,9 +219,18 @@
     "order_updated": "Volgorde bijgewerkt",
     "failed_to_update_order": "Volgorde bijwerken mislukt"
   },
+  "EN": {
+    "app_name": "Wishlist",
+    "v3_splash_title": "🎉 Welcome to the new version!",
+    "v3_splash_message": "After a long time, we've renewed Verlanglijstje.be! You can log in with the same username and password as before.",
+    "v3_splash_report": "Notice any issues or errors? Feel free to send us an email at",
+    "v3_splash_button": "Got it, thanks!"
+  },
   "FR": {
-    "app_name": "Liste de souhaits",
-    "search": "Rechercher",
+    "app_name": "Liste de souhaits",    "v3_splash_title": "🎉 Bienvenue dans la nouvelle version !",
+    "v3_splash_message": "Après un long moment, nous avons renouvelé Verlanglijstje.be ! Vous pouvez vous connecter avec le même nom d'utilisateur et mot de passe qu'avant.",
+    "v3_splash_report": "Vous remarquez un problème ou une erreur ? N'hésitez pas à nous envoyer un e-mail à",
+    "v3_splash_button": "Compris, merci !",    "search": "Rechercher",
     "logout": "Déconnexion",
     "my_lists": "Mes Listes",
     "new": "Nouveau",

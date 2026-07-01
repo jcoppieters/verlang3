@@ -238,8 +238,81 @@ async function initApp() {
   // Initialize router
   router.init();
   
+  // Show version 3 splash message (one-time)
+  showV3SplashMessage();
+  
   // Log startup
   console.log('🎁 Verlanglijstje.be initialized');
+}
+
+/**
+ * Show one-time splash message for version 3
+ */
+function showV3SplashMessage() {
+  // Check if user has already seen the splash message
+  const hasSeenSplash = localStorage.getItem('v3SplashSeen');
+  
+  if (hasSeenSplash === 'true') {
+    return; // User has already seen it
+  }
+  
+  // Create modal overlay
+  const modalContainer = document.getElementById('modalContainer');
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'v3SplashOverlay';
+  
+  overlay.innerHTML = `
+    <div class="modal" style="max-width: 600px;">
+      <div style="text-align: center; padding: var(--space-4);">
+        <h2 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: var(--space-6); color: var(--color-primary);">
+          ${t('v3_splash_title')}
+        </h2>
+        
+        <p style="font-size: var(--text-base); color: var(--color-text-primary); margin-bottom: var(--space-6); line-height: 1.6; text-align: left;">
+          ${t('v3_splash_message')}
+        </p>
+        
+        <div style="background-color: var(--color-bg-secondary); padding: var(--space-4); border-radius: var(--radius-md); margin-bottom: var(--space-6); text-align: left;">
+          <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
+            ${t('v3_splash_report')}
+          </p>
+          <a href="mailto:webmasters@verlanglijstje.be" 
+             style="color: var(--color-primary); font-weight: var(--font-semibold); text-decoration: none; word-break: break-all;">
+            webmasters@verlanglijstje.be
+          </a>
+        </div>
+        
+        <button class="btn btn-primary btn-lg" onclick="closeV3SplashMessage()" style="width: 100%;">
+          ${t('v3_splash_button')}
+        </button>
+      </div>
+    </div>
+  `;
+  
+  modalContainer.appendChild(overlay);
+  
+  // Prevent closing by clicking outside
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      // Don't close - user must click the button
+      return;
+    }
+  });
+}
+
+/**
+ * Close version 3 splash message and mark as seen
+ */
+function closeV3SplashMessage() {
+  // Mark as seen in localStorage
+  localStorage.setItem('v3SplashSeen', 'true');
+  
+  // Remove modal
+  const overlay = document.getElementById('v3SplashOverlay');
+  if (overlay) {
+    overlay.remove();
+  }
 }
 
 /**
