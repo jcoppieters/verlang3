@@ -427,7 +427,7 @@
 
 ## install on server
 
-1) this is the current nginx config, what do I need to change? I can run the backend server on poort 3007:
+1) this is the current nginx config, what do I need to change? I run the backend server on poort 3007:
 
 ```server {
         listen 80;

@@ -17,6 +17,9 @@ import './config/database';
 const app = express();
 const PORT = config.server.port;
 
+// Trust proxy - required when running behind nginx
+app.set('trust proxy', true);
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: false, // Disable for development, enable in production
