@@ -424,3 +424,36 @@
 - [ ] Accessibility improvements (ARIA, keyboard navigation)
 - [ ] Admin panel
 - [ ] Analytics dashboard
+
+## install on server
+
+1) this is the current nginx config, what do I need to change? I can run the backend server on poort 3007:
+
+```server {
+        listen 80;
+        listen [::]:80;
+
+        # listen 443;
+        # listen [::]:443;
+
+        # ssl_certificate      /etc/nginx/certs/verlang.cert;
+        # ssl_certificate_key  /etc/nginx/certs/verlang.key;
+
+        server_name www.verlanglijstje.be verlanglijstje.be verlang.coppieters.be;
+
+        root /var/www/coppieters;
+
+        location / {
+                proxy_pass http://verlang.local:8080;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host verlang.local;
+                proxy_set_header X-Forwarded-Host $host;
+                proxy_set_header X-Forwarded-Server $host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+}```
+
+2) What do I need to do to get the send email from verlanglijstje.be ?
+I have the dns admin and the domain is hosted on combell, so I think we can have smtp server etc...
