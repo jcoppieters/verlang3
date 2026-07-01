@@ -21,7 +21,7 @@ function setupUrlAutoFormat(inputId) {
  * Render List Detail Page (with items)
  */
 async function renderListDetailPage(listId) {
-  ui.showLoading('Loading list...');
+  ui.showLoading(t('loading_list'));
   
   try {
     const response = await listsAPI.get(listId);
@@ -53,8 +53,8 @@ async function renderListDetailPage(listId) {
                 ${escapeHtml(list.name)}
               </h1>
               ${isOwner ? `
-                <button class="btn btn-sm btn-primary" onclick="showAddItemModal(${listId})" title="Add Item" style="min-width: 90px;">
-                  + Add
+                <button class="btn btn-sm btn-primary" onclick="showAddItemModal(${listId})" title="${t('add_item_title')}" style="min-width: 90px;">
+                  + ${t('add')}
                 </button>
               ` : ''}
             </div>
@@ -87,7 +87,7 @@ async function renderListDetailPage(listId) {
       initializeDragAndDrop();
     }
   } catch (error) {
-    ui.showError(error.message || 'Failed to load list');
+    ui.showError(error.message || t('failed_to_load_list'));
   }
 }
 
@@ -250,9 +250,9 @@ function renderEmptyItemsState(isOwner) {
   return `
     <div class="empty-state">
       <div class="empty-state-icon">🎁</div>
-      <h3 class="empty-state-title">No items yet</h3>
+      <h3 class="empty-state-title">${t('no_items_yet')}</h3>
       <p class="empty-state-description">
-        ${isOwner ? 'Add your first item to this wishlist!' : 'This list is currently empty.'}
+        ${isOwner ? t('add_first_item') : t('list_currently_empty')}
       </p>
     </div>
   `;
@@ -354,7 +354,7 @@ async function handleAddItem(e) {
       window.location.hash = `#/lists/${listId}`;
     }
   } catch (error) {
-    ui.showToast(error.message || 'Failed to add item', 'error');
+    ui.showToast(error.message || t('failed_to_add_item'), 'error');
     submitBtn.disabled = false;
     submitBtn.textContent = t('add_item');
   }
@@ -369,30 +369,30 @@ function showAddItemModal(listId) {
     <div class="modal-overlay" onclick="closeModal(event)">
       <div class="modal item-modal" onclick="event.stopPropagation()">
         <div class="modal-header">
-          <h2>Add New Item</h2>
+          <h2>${t('add_new_item')}</h2>
           <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         
         <form id="addItemModalForm" data-list-id="${listId}">
           <div class="modal-body">
             <div class="form-group">
-              <label class="label" for="itemName">Item Name *</label>
-              <input type="text" id="itemName" name="name" class="input" required placeholder="e.g., Wireless Headphones" />
+              <label class="label" for="itemName">${t('item_name_required')}</label>
+              <input type="text" id="itemName" name="name" class="input" required placeholder="${t('item_name_placeholder')}" />
             </div>
             
             <div class="form-group">
-              <label class="label" for="itemDescription">Description</label>
-              <textarea id="itemDescription" name="description" class="textarea" placeholder="Any specific details or preferences..."></textarea>
+              <label class="label" for="itemDescription">${t('description')}</label>
+              <textarea id="itemDescription" name="description" class="textarea" placeholder="${t('description_placeholder')}"></textarea>
             </div>
             
             <div class="form-group">
-              <label class="label" for="itemUrl">URL / Link</label>
-              <input type="url" id="itemUrl" name="url" class="input" placeholder="https://example.com/product" />
+              <label class="label" for="itemUrl">${t('url_link')}</label>
+              <input type="url" id="itemUrl" name="url" class="input" placeholder="${t('url_placeholder')}" />
             </div>
             
             <div class="form-group">
-              <label class="label" for="itemPrice">Price (€)</label>
-              <input type="number" id="itemPrice" name="price" class="input" step="0.01" min="0" placeholder="0.00" />
+              <label class="label" for="itemPrice">${t('price')}</label>
+              <input type="number" id="itemPrice" name="price" class="input" step="0.01" min="0" placeholder="${t('price_placeholder')}" />
             </div>
           </div>
           
@@ -438,7 +438,7 @@ async function handleAddItemModal(e) {
       window.location.reload();
     }
   } catch (error) {
-    ui.showToast(error.message || 'Failed to add item', 'error');
+    ui.showToast(error.message || t('failed_to_add_item'), 'error');
     submitBtn.disabled = false;
     submitBtn.textContent = t('add_item');
   }
@@ -543,9 +543,9 @@ async function handleEditItemModal(e) {
       window.location.reload();
     }
   } catch (error) {
-    ui.showToast(error.message || 'Failed to update item', 'error');
+    ui.showToast(error.message || t('failed_to_add_item'), 'error');
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Save Changes';
+    submitBtn.textContent = t('save');
   }
 }
 
@@ -553,7 +553,7 @@ async function handleEditItemModal(e) {
  * Delete item from modal
  */
 async function deleteItemFromModal(itemId, itemName) {
-  if (!confirm(`Are you sure you want to delete "${itemName}"?`)) {
+  if (!confirm(t('delete_item_confirm_text').replace('{name}', itemName))) {
     return;
   }
   
@@ -561,12 +561,12 @@ async function deleteItemFromModal(itemId, itemName) {
     const response = await itemsAPI.delete(itemId);
     
     if (response.success) {
-      ui.showToast('Item deleted successfully', 'success');
+      ui.showToast(t('item_deleted_successfully'), 'success');
       closeModal();
       window.location.reload();
     }
   } catch (error) {
-    ui.showToast(error.message || 'Failed to delete item', 'error');
+    ui.showToast(error.message || t('failed_to_delete_item'), 'error');
   }
 }
 
@@ -581,7 +581,7 @@ async function editItem(itemId) {
  * Delete item
  */
 async function deleteItem(itemId, itemName) {
-  if (!confirm(`Are you sure you want to delete "${itemName}"?`)) {
+  if (!confirm(t('delete_item_confirm_text').replace('{name}', itemName))) {
     return;
   }
   
@@ -589,11 +589,11 @@ async function deleteItem(itemId, itemName) {
     const response = await itemsAPI.delete(itemId);
     
     if (response.success) {
-      ui.showToast('Item deleted successfully', 'success');
+      ui.showToast(t('item_deleted_successfully'), 'success');
       window.location.reload();
     }
   } catch (error) {
-    ui.showToast(error.message || 'Failed to delete item', 'error');
+    ui.showToast(error.message || t('failed_to_delete_item'), 'error');
   }
 }
 
@@ -606,23 +606,23 @@ function donateItem(itemId, itemName) {
     <div class="modal-overlay" onclick="closeModal(event)">
       <div class="modal" onclick="event.stopPropagation()">
         <div class="modal-header">
-          <h2>Donate Item</h2>
+          <h2>${t('donate_item_title')}</h2>
           <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         
         <form id="donateItemForm" data-item-id="${itemId}">
           <div class="modal-body">
-            <p class="mb-4">You're about to mark <strong>"${escapeHtml(itemName)}"</strong> as donated.</p>
+            <p class="mb-4">${t('donate_item_message').replace('{name}', escapeHtml(itemName))}</p>
             
             <div class="form-group">
-              <label class="label" for="donateShowFrom">Show from date (optional)</label>
+              <label class="label" for="donateShowFrom">${t('show_from_optional')}</label>
               <input type="date" id="donateShowFrom" name="showfrom" class="input" />
-              <p class="text-small text-muted" style="margin-top: var(--space-1);">When should this donation be revealed to the list owner?</p>
+              <p class="text-small text-muted" style="margin-top: var(--space-1);">${t('show_from_reveal_hint')}</p>
             </div>
             
             <div class="form-group mb-0">
-              <label class="label" for="donateComment">Add a comment (optional)</label>
-              <textarea id="donateComment" name="comment" class="textarea" placeholder="Leave a message..."></textarea>
+              <label class="label" for="donateComment">${t('comment_optional')}</label>
+              <textarea id="donateComment" name="comment" class="textarea" placeholder="${t('leave_message_placeholder')}"></textarea>
             </div>
           </div>
           
@@ -656,20 +656,20 @@ async function handleDonateItem(e) {
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="loading-inline"></span> Processing...';
+  submitBtn.innerHTML = `<span class="loading-inline"></span> ${t('processing')}`;
   
   try {
     const response = await itemsAPI.donate(itemId, data);
     
     if (response.success) {
-      ui.showToast('Thank you! Item marked as donated 🎁', 'success');
+      ui.showToast(t('item_donated_success'), 'success');
       closeModal();
       window.location.reload();
     }
   } catch (error) {
-    ui.showToast(error.message || 'Failed to donate item', 'error');
+    ui.showToast(error.message || t('failed_to_donate_item'), 'error');
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Confirm Donation';
+    submitBtn.textContent = t('confirm_donation');
   }
 }
 
@@ -682,18 +682,18 @@ function reserveItem(itemId, itemName) {
     <div class="modal-overlay" onclick="closeModal(event)">
       <div class="modal" onclick="event.stopPropagation()">
         <div class="modal-header">
-          <h2>Reserve Item</h2>
+          <h2>${t('reserve_item_title')}</h2>
           <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         
         <form id="reserveItemForm" data-item-id="${itemId}">
           <div class="modal-body">
-            <p class="mb-4">You're about to reserve <strong>"${escapeHtml(itemName)}"</strong>.</p>
-            <p class="text-small text-muted mb-4">This lets the owner know you plan to get this item. You can donate it later or take back your reservation.</p>
+            <p class="mb-4">${t('reserve_item_message').replace('{name}', escapeHtml(itemName))}</p>
+            <p class="text-small text-muted mb-4">${t('reserve_item_hint')}</p>
             
             <div class="form-group mb-0">
-              <label class="label" for="reserveComment">Add a comment (optional)</label>
-              <textarea id="reserveComment" name="comment" class="textarea" placeholder="Leave a message..."></textarea>
+              <label class="label" for="reserveComment">${t('comment_optional')}</label>
+              <textarea id="reserveComment" name="comment" class="textarea" placeholder="${t('leave_message_placeholder')}"></textarea>
             </div>
           </div>
           
@@ -719,20 +719,20 @@ async function handleReserveItem(e) {
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="loading-inline"></span> Processing...';
+  submitBtn.innerHTML = `<span class="loading-inline"></span> ${t('processing')}`;
   
   try {
     const response = await itemsAPI.reserve(itemId);
     
     if (response.success) {
-      ui.showToast('Item reserved successfully! 📌', 'success');
+      ui.showToast(t('item_reserved_success'), 'success');
       closeModal();
       window.location.reload();
     }
   } catch (error) {
-    ui.showToast(error.message || 'Failed to reserve item', 'error');
+    ui.showToast(error.message || t('failed_to_reserve_item'), 'error');
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Reserve Item';
+    submitBtn.textContent = t('reserve_item_button');
   }
 }
 
@@ -740,7 +740,7 @@ async function handleReserveItem(e) {
  * Take back item (undo reserve/donate)
  */
 async function takebackItem(itemId) {
-  if (!confirm('Are you sure you want to take back this reservation?')) {
+  if (!confirm(t('takeback_reservation_confirm'))) {
     return;
   }
   
@@ -748,11 +748,11 @@ async function takebackItem(itemId) {
     const response = await itemsAPI.takeback(itemId);
     
     if (response.success) {
-      ui.showToast('Reservation taken back', 'success');
+      ui.showToast(t('reservation_taken_back'), 'success');
       window.location.reload();
     }
   } catch (error) {
-    ui.showToast(error.message || 'Failed to take back item', 'error');
+    ui.showToast(error.message || t('failed_to_takeback'), 'error');
   }
 }
 
@@ -765,7 +765,7 @@ async function renderSearchPage() {
     <div class="container" style="max-width: 800px;">
       <div class="flex justify-between items-center mb-6">
         <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0;">
-          Search
+          ${t('search_title')}
         </h1>
         <button class="btn btn-secondary btn-sm mobile-only" onclick="window.history.back()">${t('cancel')}</button>
       </div>
@@ -778,7 +778,7 @@ async function renderSearchPage() {
               id="searchQuery" 
               name="query" 
               class="input" 
-              placeholder="Search for users or lists..." 
+              placeholder="${t('search_users_lists_placeholder')}" 
               required
               style="flex: 1;"
             />
@@ -804,7 +804,7 @@ async function handleSearch(e) {
   const resultsContainer = document.getElementById('searchResults');
   
   if (query.length < 2) {
-    resultsContainer.innerHTML = '<p class="text-muted">Please enter at least 2 characters</p>';
+    resultsContainer.innerHTML = `<p class="text-muted">${t('enter_at_least_2_chars')}</p>`;
     return;
   }
   
@@ -854,9 +854,9 @@ async function handleSearch(e) {
     
     resultsContainer.innerHTML = hasResults ? `
       <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); color: #E85D4A; margin-bottom: var(--space-6);">
-        Gezocht op: ${escapeHtml(query)}
+        ${t('searched_for')}: ${escapeHtml(query)}
       </h2>
-      <p class="text-muted mb-4">Klik op de naam van een lijstje om het bij te voegen bij de lijstjes die je volgt.</p>
+      <p class="text-muted mb-4">${t('click_to_follow_hint')}</p>
       <div class="grid grid-cols-1" style="gap: var(--space-6);">
         ${Object.entries(grouped).map(([userId, userData]) => `
           <div>
@@ -872,7 +872,7 @@ async function handleSearch(e) {
                 `).join('')}
               </div>
             ` : `
-              <p class="text-muted" style="margin-left: var(--space-4);">No public lists</p>
+              <p class="text-muted" style="margin-left: var(--space-4);">${t('no_public_lists')}</p>
             `}
           </div>
         `).join('')}
@@ -880,8 +880,8 @@ async function handleSearch(e) {
     ` : `
       <div class="empty-state">
         <div class="empty-state-icon">🔍</div>
-        <h3 class="empty-state-title">No results found</h3>
-        <p class="empty-state-description">Try searching with different keywords</p>
+        <h3 class="empty-state-title">${t('no_results_found')}</h3>
+        <p class="empty-state-description">${t('try_different_search')}</p>
       </div>
     `;
   } catch (error) {
@@ -897,12 +897,12 @@ async function followListFromSearch(listId) {
     const response = await listsAPI.follow(listId);
     
     if (response.success) {
-      ui.showToast('Now following this list!', 'success');
+      ui.showToast(t('now_following_list'), 'success');
       // Refresh sidebar to show the newly followed list
       await loadSidebar();
     }
   } catch (error) {
-    ui.showToast(error.message || 'Failed to follow list', 'error');
+    ui.showToast(error.message || t('failed_to_follow_list'), 'error');
   }
 }
 
@@ -910,7 +910,7 @@ async function followListFromSearch(listId) {
  * Follow user (follow all their public lists)
  */
 async function followUser(userId) {
-  ui.showToast('Feature coming soon: Follow all user lists', 'info');
+  ui.showToast(t('follow_all_user_lists_soon'), 'info');
 }
 
 /**
@@ -1115,7 +1115,7 @@ async function updateItemPriorities() {
   // Get list ID from URL
   const listId = window.location.hash.match(/#\/lists\/(\d+)/)?.[1];
   if (!listId) {
-    ui.showToast('List ID not found', 'error');
+    ui.showToast(t('list_id_not_found'), 'error');
     return;
   }
   
@@ -1131,9 +1131,9 @@ async function updateItemPriorities() {
       item.dataset.itemPriority = 100 - index;
     });
     
-    ui.showToast('Order updated', 'success');
+    ui.showToast(t('order_updated'), 'success');
   } catch (error) {
-    ui.showToast('Failed to update order', 'error');
+    ui.showToast(t('failed_to_update_order'), 'error');
     console.error('Update priorities error:', error);
   }
 }
