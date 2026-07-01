@@ -93,11 +93,29 @@ export async function register(req: AuthRequest, res: Response): Promise<void> {
       },
       token
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Register error:', error);
+    
+    // Handle specific database errors
+    if (error.code === 'ER_DATA_TOO_LONG') {
+      res.status(500).json({
+        success: false,
+        error: 'Registration failed. Please contact support if this problem persists.'
+      });
+      return;
+    }
+    
+    if (error.code === 'ER_DUP_ENTRY') {
+      res.status(400).json({
+        success: false,
+        error: 'Username or email already exists'
+      });
+      return;
+    }
+    
     res.status(500).json({
       success: false,
-      error: 'Registration failed'
+      error: 'Registration failed. Please try again later.'
     });
   }
 }

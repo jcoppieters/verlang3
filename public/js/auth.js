@@ -114,27 +114,27 @@ function renderRegisterPage() {
         <div class="text-center mb-6">
           <div style="font-size: 3rem; margin-bottom: 1rem;">🎁</div>
           <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0.5rem;">
-            Create Account
+            ${t('create_account')}
           </h1>
-          <p class="text-muted">Join Verlanglijstje.be today</p>
+          <p class="text-muted">${t('join_verlanglijstje')}</p>
         </div>
         
         <form id="registerForm">
           <div class="form-group">
-            <label class="label" for="regName">Full Name</label>
+            <label class="label" for="regName">${t('full_name')}</label>
             <input 
               type="text" 
               id="regName" 
               name="name" 
               class="input" 
               required 
-              placeholder="Your full name"
+              placeholder="${t('enter_full_name')}"
             />
             <span class="error-message" id="nameError"></span>
           </div>
           
           <div class="form-group">
-            <label class="label" for="regUsername">Username</label>
+            <label class="label" for="regUsername">${t('username')}</label>
             <input 
               type="text" 
               id="regUsername" 
@@ -142,13 +142,13 @@ function renderRegisterPage() {
               class="input" 
               required 
               autocomplete="username"
-              placeholder="Choose a username"
+              placeholder="${t('enter_username')}"
             />
             <span class="error-message" id="regUsernameError"></span>
           </div>
           
           <div class="form-group">
-            <label class="label" for="regEmail">Email</label>
+            <label class="label" for="regEmail">${t('email')}</label>
             <input 
               type="email" 
               id="regEmail" 
@@ -156,13 +156,13 @@ function renderRegisterPage() {
               class="input" 
               required 
               autocomplete="email"
-              placeholder="your.email@example.com"
+              placeholder="${t('enter_email')}"
             />
             <span class="error-message" id="emailError"></span>
           </div>
           
           <div class="form-group">
-            <label class="label" for="regPassword">Password</label>
+            <label class="label" for="regPassword">${t('password')}</label>
             <input 
               type="password" 
               id="regPassword" 
@@ -170,14 +170,14 @@ function renderRegisterPage() {
               class="input" 
               required 
               autocomplete="new-password"
-              placeholder="Choose a strong password"
+              placeholder="${t('enter_password')}"
               minlength="6"
             />
             <span class="error-message" id="regPasswordError"></span>
           </div>
           
           <div class="form-group">
-            <label class="label" for="regConfirmPassword">Confirm Password</label>
+            <label class="label" for="regConfirmPassword">${t('confirm_password')}</label>
             <input 
               type="password" 
               id="regConfirmPassword" 
@@ -185,21 +185,21 @@ function renderRegisterPage() {
               class="input" 
               required 
               autocomplete="new-password"
-              placeholder="Confirm your password"
+              placeholder="${t('enter_confirm_password')}"
             />
             <span class="error-message" id="confirmPasswordError"></span>
           </div>
           
           <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block btn-lg">
-              Create Account
+              ${t('create_account')}
             </button>
           </div>
           
           <div class="text-center">
             <p class="text-small text-muted">
-              Already have an account? 
-              <a href="#/login" class="text-primary">Sign in</a>
+              ${t('already_have_account')} 
+              <a href="#/login" class="text-primary">${t('sign_in')}</a>
             </p>
           </div>
         </form>
@@ -233,26 +233,26 @@ async function handleRegister(e) {
   
   // Validate passwords match
   if (userData.password !== confirmPassword) {
-    document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+    document.getElementById('confirmPasswordError').textContent = t('passwords_do_not_match');
     return;
   }
   
   // Disable submit button
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="loading-inline"></span> Creating account...';
+  submitBtn.innerHTML = `<span class="loading-inline"></span> ${t('creating_account')}`;
   
   try {
     const response = await authAPI.register(userData);
     
     if (response.success) {
-      ui.showToast('Account created successfully!', 'success');
+      ui.showToast(t('account_created_successfully'), 'success');
       window.location.hash = '#/lists';
     }
   } catch (error) {
-    ui.showToast(error.message || 'Registration failed', 'error');
+    ui.showToast(error.message || t('registration_failed'), 'error');
     submitBtn.disabled = false;
-    submitBtn.textContent = 'Create Account';
+    submitBtn.textContent = t('create_account');
   }
 }
 
