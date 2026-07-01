@@ -7,6 +7,7 @@
     "start": "node dist/server.js",
     "dev": "nodemon --exec ts-node server/server.ts",
     "build": "tsc",
+    "migrate-passwords": "ts-node server/scripts/migrate-passwords.ts",
     "lint": "eslint server/**/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

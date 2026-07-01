@@ -1,9 +1,11 @@
 import { Response } from 'express';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { AuthRequest } from '../middleware/auth';
 import { query, queryOne, insert } from '../config/database';
 import { generateToken } from '../middleware/auth';
 import { config } from '../config/conf';
+import { sendPasswordResetEmail } from '../utils/email';
 
 interface User {
   id: number;
@@ -140,9 +142,7 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
     }
 
     // Verify password
-    // TODO: Re-enable bcrypt password hashing before production
-    // const isValidPassword = await bcrypt.compare(password, user.password);
-    const isValidPassword = password === user.password; // Plain text comparison for legacy DB
+    const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
       res.status(401).json({
@@ -339,6 +339,105 @@ export async function updatePassword(req: AuthRequest, res: Response): Promise<v
     res.status(500).json({
       success: false,
       error: 'Failed to update password'
+    });
+  }
+}
+
+// Forgot password - send reset token
+export async function forgotPassword(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { email } = req.body;
+
+    // Find user by email
+    const user = await queryOne<User>(
+      'SELECT * FROM users WHERE LOWER(email) = LOWER(?)',
+      [email]
+    );
+
+    // Always return success (don't reveal if email exists)
+    if (!user) {
+      res.json({
+        success: true,
+        message: 'If that email exists, a password reset link has been sent'
+      });
+      return;
+    }
+
+    // Generate reset token (valid for 1 hour)
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+    const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
+
+    // Store reset token in database (you may need to add these columns)
+    await query(
+      'UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?',
+      [resetTokenHash, resetTokenExpiry, user.id]
+    );
+
+    // Send password reset email
+    await sendPasswordResetEmail(user.email, user.name, resetToken);
+
+    res.json({
+      success: true,
+      message: 'If that email exists, a password reset link has been sent'
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to process password reset request'
+    });
+  }
+}
+
+// Reset password with token
+export async function resetPassword(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      res.status(400).json({
+        success: false,
+        error: 'Token and new password are required'
+      });
+      return;
+    }
+
+    // Hash the token to compare with database
+    const resetTokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+    // Find user by reset token
+    const user = await queryOne<User>(
+      'SELECT * FROM users WHERE reset_token = ? AND reset_token_expiry > NOW()',
+      [resetTokenHash]
+    );
+
+    if (!user) {
+      res.status(400).json({
+        success: false,
+        error: 'Invalid or expired reset token'
+      });
+      return;
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+
+    // Update password and clear reset token
+    await query(
+      'UPDATE users SET password = ?, reset_token = NULL, reset_token_expiry = NULL WHERE id = ?',
+      [hashedPassword, user.id]
+    );
+
+    res.json({
+      success: true,
+      message: 'Password has been reset successfully'
+    });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to reset password'
     });
   }
 }

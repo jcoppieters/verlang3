@@ -2,46 +2,55 @@
 
 ## Setup & Infrastructure
 
-- [ ] Initialize npm project
-  - [ ] Create package.json with dependencies
-  - [ ] Install Express.js, mysql2, jsonwebtoken, bcrypt, dotenv, nodemailer
-  - [ ] Install dev dependencies: nodemon, eslint
-- [ ] Create directory structure
-  - [ ] server/ directory with subdirectories
-  - [ ] public/ directory with subdirectories
-  - [ ] Create all base files
-- [ ] Environment configuration
-  - [ ] Create .env.example
-  - [ ] Create .gitignore
-  - [ ] Setup database connection configuration
+- [X] Initialize npm project
+  - [X] Create package.json with dependencies
+  - [X] Install Express.js, mysql2, jsonwebtoken, bcrypt, nodemailer
+  - [X] Install dev dependencies: nodemon, eslint, typescript
+- [X] Create directory structure
+  - [X] server/ directory with subdirectories
+  - [X] public/ directory with subdirectories
+  - [X] Create all base files
+- [X] Environment configuration
+  - [X] Create TypeScript config system (conf.ts, conf.dev.ts, conf.prod.ts)
+  - [X] Create .gitignore
+  - [X] Setup database connection configuration
 
 ## Backend Development
 
 ### Database Layer
-- [ ] Create database connection module (server/config/database.js)
-  - [ ] Connection pool setup
-  - [ ] Error handling
-  - [ ] Query helper functions
-- [ ] Verify existing database schema compatibility
-  - [ ] Test connection to existing database
-  - [ ] Validate table structures
+- [X] Create database connection module (server/config/database.ts)
+  - [X] Connection pool setup
+  - [X] Error handling
+  - [X] Query helper functions
+- [X] Verify existing database schema compatibility
+  - [X] Test connection to existing database
+  - [X] Validate table structures
+  - [X] Database migrations for password columns
 
 ### Authentication System
-- [ ] Implement auth controller (server/controllers/authController.js)
-  - [ ] Register endpoint with validation
-  - [ ] Login endpoint with JWT generation
-  - [ ] Logout functionality
-  - [ ] Password reset request
-  - [ ] Password reset confirmation
-- [ ] Create auth middleware (server/middleware/auth.js)
-  - [ ] JWT verification
-  - [ ] Token expiration handling
-  - [ ] User session loading
-- [ ] Create validation middleware (server/middleware/validation.js)
-  - [ ] Email validation
-  - [ ] Password strength requirements
-  - [ ] Input sanitization
-- [ ] Setup auth routes (server/routes/auth.js)
+- [X] Implement auth controller (server/controllers/authController.ts)
+  - [X] Register endpoint with validation
+  - [X] Login endpoint with JWT generation (bcrypt password verification)
+  - [X] Logout functionality
+  - [X] Password reset request (forgot password)
+  - [X] Password reset confirmation
+  - [X] Password migration script (plain text → bcrypt)
+- [X] Create auth middleware (server/middleware/auth.ts)
+  - [X] JWT verification
+  - [X] Token expiration handling
+  - [X] User session loading
+- [X] Create validation middleware (server/middleware/validation.ts)
+  - [X] Email validation
+  - [X] Password strength requirements
+  - [X] Input sanitization
+- [X] Setup auth routes (server/routes/auth.ts)
+  - [X] POST /auth/register
+  - [X] POST /auth/login
+  - [X] POST /auth/forgot-password
+  - [X] POST /auth/reset-password
+  - [X] GET /auth/profile
+  - [X] PUT /auth/profile
+  - [X] PUT /auth/password
 
 ### User Management
 - [ ] Implement user controller (server/controllers/userController.js)
@@ -62,143 +71,161 @@
 - [ ] Create user routes
 
 ### List Management
-- [ ] Implement list controller (server/controllers/listController.js)
-  - [ ] Get all lists (own + followed)
-  - [ ] Get single list details
-  - [ ] Create new list
-  - [ ] Update list
-  - [ ] Delete list
-  - [ ] Follow list
-  - [ ] Unfollow list
-  - [ ] Share list via email
-- [ ] Create list routes (server/routes/lists.js)
+- [X] Implement list controller (server/controllers/listController.ts)
+  - [X] Get all lists (own + followed)
+  - [X] Get single list details
+  - [X] Create new list
+  - [X] Update list
+  - [X] Delete list
+  - [X] Follow list
+  - [X] Unfollow list
+  - [X] Share list via email
+- [X] Create list routes (server/routes/lists.ts)
 
 ### Item Management
-- [ ] Implement item controller (server/controllers/itemController.js)
-  - [ ] Get items for a list
-  - [ ] Create item
-  - [ ] Update item
-  - [ ] Delete item
-  - [ ] Reserve item
-  - [ ] Mark item as donated
-  - [ ] Take back reservation/donation
-- [ ] Create item routes (server/routes/items.js)
+- [X] Implement item controller (server/controllers/itemController.ts)
+  - [X] Get items for a list
+  - [X] Create item
+  - [X] Update item
+  - [X] Delete item
+  - [X] Reserve item
+  - [X] Mark item as donated
+  - [X] Take back reservation/donation
+  - [X] Reorder items (priority system)
+- [X] Create item routes (server/routes/items.ts)
 
 ### Search & Discovery
-- [ ] Implement search functionality
-  - [ ] Search users by name/username
-  - [ ] Search lists by name
-  - [ ] Combined search results
-  - [ ] Public vs private list filtering
+- [X] Implement search functionality
+  - [X] Search users by name/username
+  - [X] Search lists by name
+  - [X] Combined search results
+  - [X] Public vs private list filtering
 
 ### Public Sharing
-- [ ] Implement share controller (server/controllers/shareController.js)
-  - [ ] Encode/decode share IDs (match Java algorithm)
-  - [ ] Public list view endpoint
-  - [ ] Item donation from public view
-- [ ] Create share routes (server/routes/share.js)
+- [X] Implement share controller (server/controllers/shareController.ts)
+  - [X] Encode/decode share IDs (match Java algorithm)
+  - [X] Public list view endpoint
+  - [X] Item donation from public view
+  - [X] Search for users and lists
+- [X] Create share routes (server/routes/share.ts)
 
 ### Utilities
-- [ ] Email utilities (server/utils/email.js)
-  - [ ] Send welcome email
-  - [ ] Send password reset email
-  - [ ] Send share notification email
-  - [ ] Email templates (HTML)
-- [ ] Helper functions (server/utils/helpers.js)
-  - [ ] Date formatting
-  - [ ] String utilities
-  - [ ] Validation helpers
+- [X] Email utilities (server/utils/email.ts)
+  - [X] Send welcome email
+  - [X] Send password reset email
+  - [X] Send share notification email
+  - [X] Email templates (HTML)
+- [X] Helper functions (server/utils/helpers.ts)
+  - [X] Date formatting
+  - [X] String utilities
+  - [X] Validation helpers
 
 ### Main Server
-- [ ] Create server.js
-  - [ ] Express app setup
-  - [ ] Middleware configuration (cors, json, static files)
-  - [ ] Route registration
-  - [ ] Error handling middleware
-  - [ ] 404 handling
-  - [ ] Server startup
+- [X] Create server.ts
+  - [X] Express app setup
+  - [X] Middleware configuration (cors, json, static files, helmet, rate limiting)
+  - [X] Route registration
+  - [X] Error handling middleware
+  - [X] 404 handling
+  - [X] Server startup
 
 ## Frontend Development
 
 ### HTML Structure
-- [ ] Create index.html
-  - [ ] Meta tags for mobile responsiveness
-  - [ ] Semantic HTML5 structure
-  - [ ] Main app container
-  - [ ] Loading state
-  - [ ] Template containers for dynamic content
+- [X] Create index.html
+  - [X] Meta tags for mobile responsiveness
+  - [X] Semantic HTML5 structure
+  - [X] Main app container
+  - [X] Loading state
+  - [X] Template containers for dynamic content
+  - [X] Navbar with user icon
+  - [X] Hamburger menu for mobile
 
 ### CSS Styling
-- [ ] Main stylesheet (public/css/main.css)
-  - [ ] CSS variables for theme colors
-  - [ ] Reset/normalize styles
-  - [ ] Typography
-  - [ ] Layout utilities
-  - [ ] Grid system
-- [ ] Component styles (public/css/components.css)
-  - [ ] Cards
-  - [ ] Buttons
-  - [ ] Forms
-  - [ ] Modals
-  - [ ] Notifications/toasts
-  - [ ] Navigation
-  - [ ] Sidebar
-  - [ ] Empty states
-  - [ ] Loading states
-- [ ] Mobile styles (public/css/mobile.css)
-  - [ ] Mobile navigation (hamburger menu)
-  - [ ] Touch-friendly interactions
-  - [ ] Responsive breakpoints
-  - [ ] Mobile-specific layouts
+- [X] Main stylesheet (public/css/main.css)
+  - [X] CSS variables for theme colors
+  - [X] Reset/normalize styles
+  - [X] Typography
+  - [X] Layout utilities
+  - [X] Grid system
+  - [X] Component styles (cards, buttons, forms, modals, etc.)
+  - [X] Mobile navigation (hamburger menu)
+  - [X] Touch-friendly interactions
+  - [X] Responsive breakpoints
+  - [X] Mobile-specific layouts
+  - [X] Drag-and-drop item reordering
+  - [X] Empty states
+  - [X] Loading states
 
 ### JavaScript - Core
-- [ ] API client (public/js/api.js)
-  - [ ] Fetch wrapper with error handling
-  - [ ] JWT token management
-  - [ ] Request/response interceptors
-  - [ ] API endpoint constants
-- [ ] Main app (public/js/app.js)
-  - [ ] SPA routing (hash-based or history API)
-  - [ ] Page initialization
-  - [ ] Navigation handling
-  - [ ] Global state management
-  - [ ] Toast notifications
-  - [ ] Modal management
-  - [ ] Responsive layout handling
+- [X] API client (public/js/api.js)
+  - [X] Fetch wrapper with error handling
+  - [X] JWT token management
+  - [X] Request/response interceptors
+  - [X] API endpoint constants
+- [X] Main app (public/js/app.js)
+  - [X] SPA routing (hash-based)
+  - [X] Page initialization
+  - [X] Navigation handling
+  - [X] Global state management
+  - [X] Toast notifications
+  - [X] Modal management
+  - [X] Responsive layout handling
+  - [X] Sidebar toggle
+  - [X] Navbar updates
+
+### JavaScript - Internationalization
+- [X] i18n module (public/js/i18n.js)
+  - [X] Multi-language support (NL/FR/EN)
+  - [X] Translation loading
+  - [X] Language switching
+  - [X] t() helper function
+- [X] translations.json
+  - [X] Complete translations for all UI text
+  - [X] Auth page translations
+  - [X] List/item translations
+  - [X] Modal translations
+  - [X] Error messages
+  - [X] Success messages
 
 ### JavaScript - Authentication
-- [ ] Auth module (public/js/auth.js)
-  - [ ] Login form handling
-  - [ ] Register form handling
-  - [ ] Forgot password form
-  - [ ] Token storage (localStorage)
-  - [ ] Auto-login on page load
-  - [ ] Logout functionality
-  - [ ] Session expiry handling
+- [X] Auth module (public/js/auth.js)
+  - [X] Login form handling
+  - [X] Register form handling (fully translated)
+  - [ ] Forgot password form (backend ready, frontend TODO)
+  - [X] Token storage (localStorage)
+  - [X] Auto-login on page load
+  - [X] Logout functionality
+  - [X] Session expiry handling
+  - [X] Profile page
+  - [X] Update profile functionality
+  - [X] Change password functionality
 
 ### JavaScript - Lists
-- [ ] List management (public/js/lists.js)
-  - [ ] Display user's lists in sidebar
-  - [ ] Display followed lists in sidebar
-  - [ ] Create list modal/form
-  - [ ] Edit list modal/form
-  - [ ] Delete list confirmation
-  - [ ] Follow/unfollow buttons
-  - [ ] Share list modal with email input
-  - [ ] List search/filter
+- [X] List management (public/js/lists.js)
+  - [X] Display user's lists in sidebar
+  - [X] Display followed lists in sidebar
+  - [X] Create list modal/form (fully translated)
+  - [X] Edit list modal/form (fully translated)
+  - [X] Delete list confirmation
+  - [X] Follow/unfollow buttons
+  - [X] Share list modal with email input
+  - [X] Unfollow from list detail page
 
 ### JavaScript - Items
-- [ ] Item management (public/js/items.js)
-  - [ ] Display items for selected list
-  - [ ] Add item form/modal
-  - [ ] Edit item form/modal
-  - [ ] Delete item confirmation
-  - [ ] Reserve item action
-  - [ ] Donate item action
-  - [ ] Take back action
-  - [ ] Priority sorting
-  - [ ] Show/hide donated items
-  - [ ] Item details view
+- [X] Item management (public/js/items.js)
+  - [X] Display items for selected list
+  - [X] Add item form/modal (fully translated)
+  - [X] Edit item form/modal (fully translated)
+  - [X] Delete item confirmation
+  - [X] Reserve item action with modal
+  - [X] Donate item action with modal
+  - [X] Take back action
+  - [X] Priority sorting (new items at top)
+  - [X] Drag-and-drop reordering (desktop & mobile)
+  - [X] Show/hide based on showfrom date
+  - [X] Item search functionality
+  - [X] URL auto-format (https:// prefix)
 
 ### Pages/Views
 
