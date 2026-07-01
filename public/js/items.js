@@ -53,17 +53,17 @@ async function renderListDetailPage(listId) {
                 ${escapeHtml(list.name)}
               </h1>
               ${isOwner ? `
-                <button class="btn btn-sm btn-primary" onclick="showAddItemModal(${listId})" title="${t('add_item_title')}" style="min-width: 90px;">
-                  + ${t('add')}
-                </button>
+                <button class="btn btn-sm btn-secondary list-edit-btn" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="${t('edit')}">
+                ✏️ 
+              </button>
               ` : ''}
             </div>
             ${isOwner ? `
-              <button class="btn btn-sm btn-secondary list-edit-btn" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="${t('edit')}" style="min-width: 90px;">
-                ✏️ ${t('edit')}
-              </button>
+              <button class="btn btn-sm btn-primary" onclick="showAddItemModal(${listId})" title="${t('add_item_title')}">
+                  + ${t('add')}
+                </button>
             ` : `
-              <button class="btn btn-sm btn-secondary" onclick="unfollowList(${listId}, '${escapeHtml(list.name)}')" title="${t('unfollow')}" style="min-width: 90px;">
+              <button class="btn btn-sm btn-secondary" onclick="unfollowList(${listId}, '${escapeHtml(list.name)}')" title="${t('unfollow')}">
                 ✖ ${t('unfollow')}
               </button>
             `}

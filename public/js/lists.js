@@ -54,23 +54,23 @@ function showCreateListModal() {
     <div class="modal-overlay" onclick="closeModal(event)">
       <div class="modal" onclick="event.stopPropagation()">
         <div class="modal-header">
-          <h2>Create New List</h2>
+          <h2>${t('create_new_list')}</h2>
           <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         
         <form id="createListForm">
           <div class="modal-body">
             <div class="form-group">
-              <label class="label" for="listName">List Name</label>
-              <input type="text" id="listName" name="name" class="input" required placeholder="e.g., Birthday 2026" />
+              <label class="label" for="listName">${t('list_name')}</label>
+              <input type="text" id="listName" name="name" class="input" required placeholder="${t('list_name_placeholder')}" />
             </div>
             
             <div class="form-group mb-0">
               <div class="checkbox-group">
                 <input type="checkbox" id="listPublic" name="public" class="checkbox" />
-                <label for="listPublic">Make this list public</label>
+                <label for="listPublic">${t('make_list_public')}</label>
               </div>
-              <p class="text-small text-muted mt-1">Public lists can be found by others</p>
+              <p class="text-small text-muted mt-1">${t('public_list_desc')}</p>
             </div>
           </div>
           
@@ -127,21 +127,21 @@ function editList(id, name, isPublic) {
     <div class="modal-overlay" onclick="closeModal(event)">
       <div class="modal" onclick="event.stopPropagation()">
         <div class="modal-header">
-          <h2>Edit List</h2>
+          <h2>${t('edit_list')}</h2>
           <button class="modal-close" onclick="closeModal()">&times;</button>
         </div>
         
         <form id="editListForm" data-list-id="${id}">
           <div class="modal-body">
             <div class="form-group">
-              <label class="label" for="editListName">List Name</label>
+              <label class="label" for="editListName">${t('list_name')}</label>
               <input type="text" id="editListName" name="name" class="input" value="${escapeHtml(name)}" required />
             </div>
             
             <div class="form-group mb-0">
               <div class="checkbox-group">
                 <input type="checkbox" id="editListPublic" name="public" class="checkbox" ${isPublic === 'Y' ? 'checked' : ''} />
-                <label for="editListPublic">Make this list public</label>
+                <label for="editListPublic">${t('make_list_public')}</label>
               </div>
             </div>
           </div>
