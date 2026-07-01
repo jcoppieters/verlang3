@@ -48,25 +48,23 @@ async function renderListDetailPage(listId) {
         <!-- Header -->
         <div class="mb-6">
           <div class="flex justify-between items-start mb-4 list-header">
-            <div class="flex items-center gap-3" style="flex: 1;">
-              <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0;">
-                ${escapeHtml(list.name)}
-              </h1>
+            <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0; flex: 1;">
+              ${escapeHtml(list.name)}
+            </h1>
+            <div class="flex items-center gap-2 list-header-actions">
               ${isOwner ? `
                 <button class="btn btn-sm btn-secondary list-edit-btn" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="${t('edit')}">
-                ✏️ 
-              </button>
-              ` : ''}
-            </div>
-            ${isOwner ? `
-              <button class="btn btn-sm btn-primary" onclick="showAddItemModal(${listId})" title="${t('add_item_title')}">
+                  ✏️ 
+                </button>
+                <button class="btn btn-sm btn-primary" onclick="showAddItemModal(${listId})" title="${t('add_item_title')}">
                   + ${t('add')}
                 </button>
-            ` : `
-              <button class="btn btn-sm btn-secondary" onclick="unfollowList(${listId}, '${escapeHtml(list.name)}')" title="${t('unfollow')}">
-                ✖ ${t('unfollow')}
-              </button>
-            `}
+              ` : `
+                <button class="btn btn-sm btn-secondary" onclick="unfollowList(${listId}, '${escapeHtml(list.name)}')" title="${t('unfollow')}">
+                  ✖ ${t('unfollow')}
+                </button>
+              `}
+            </div>
           </div>
           <p class="text-muted">
             ${isOwner ? t('your_list') : `${t('by')} ${escapeHtml(list.ownerName)}`} • 

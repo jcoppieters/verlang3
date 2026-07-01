@@ -1177,6 +1177,10 @@ button {
     gap: var(--space-2);
   }
   
+  .list-header-actions {
+    flex-shrink: 0;
+  }
+  
   /* Prevent edit button from growing */
   .list-edit-btn {
     flex: 0 0 auto !important;

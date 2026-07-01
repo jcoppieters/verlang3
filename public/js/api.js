@@ -297,7 +297,7 @@ const ui = {
     // Auto remove after 5 seconds
     setTimeout(() => {
       toast.remove();
-    }, 5000);
+    }, 3000);
   },
   
   // Show loading state
