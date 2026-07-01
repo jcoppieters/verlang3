@@ -3,7 +3,7 @@
  */
 
 /**
- * Render Lists Page (My Lists + Followed Lists)
+ * Render Lists Page - Redirects to first available list
  */
 async function renderListsPage() {
   ui.showLoading('Loading your lists...');
@@ -21,166 +21,28 @@ async function renderListsPage() {
     if (myLists.length > 0) {
       window.location.hash = `#/lists/${myLists[0].id}`;
       return;
-    } else if (followedLists.length > 0) {
+    }
+    
+    if (followedLists.length > 0) {
       window.location.hash = `#/lists/${followedLists[0].id}`;
       return;
     }
     
+    // No lists - show empty state with create button
     const main = document.getElementById('mainContent');
     main.innerHTML = `
       <div class="container">
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
-          <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold);">
-            My Wishlists
-          </h1>
-          <button class="btn btn-primary" onclick="showCreateListModal()">
-            + New List
-          </button>
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <h2 class="empty-state-title">${t('no_lists_yet')}</h2>
+          <p class="empty-state-description">${t('no_lists_desc')}</p>
+          <button class="btn btn-primary" onclick="showCreateListModal()">${t('create_list')}</button>
         </div>
-        
-        <!-- My Lists -->
-        <section class="mb-8">
-          <h2 class="mb-4" style="font-size: var(--text-xl); font-weight: var(--font-semibold);">
-            My Lists (${myLists.length})
-          </h2>
-          
-          <div class="grid grid-cols-1" id="myListsContainer">
-            ${myLists.length === 0 ? renderEmptyState('You haven\'t created any lists yet', 'Create your first wishlist to get started!') : myLists.map(renderListCard).join('')}
-          </div>
-        </section>
-        
-        <!-- Followed Lists -->
-        <section>
-          <h2 class="mb-4" style="font-size: var(--text-xl); font-weight: var(--font-semibold);">
-            Following (${followedLists.length})
-          </h2>
-          
-          <div id="followedListsContainer">
-            ${followedLists.length === 0 ? renderEmptyState('You\'re not following any lists yet', 'Search for friends to follow their wishlists!', '#/search') : renderGroupedFollowedLists(followedLists)}
-          </div>
-        </section>
       </div>
     `;
   } catch (error) {
     ui.showError(error.message || 'Failed to load lists');
   }
-}
-
-/**
- * Render a single list card (own list)
- */
-function renderListCard(list) {
-  return `
-    <div class="card">
-      <div class="flex justify-between items-start mb-3">
-        <div style="flex: 1;">
-          <h3 class="card-title mb-1">
-            <a href="#/lists/${list.id}" style="color: var(--color-text-primary);">${escapeHtml(list.name)}</a>
-          </h3>
-          <p class="text-small text-muted">
-            ${list.itemCount || 0} items • ${list.public === 'Y' ? 'Public' : 'Private'}
-          </p>
-        </div>
-        
-        <div class="flex gap-2">
-          <button class="btn-text" onclick="editList(${list.id}, '${escapeHtml(list.name)}', '${list.public}')" title="Edit">
-            ✏️
-          </button>
-          <button class="btn-text" onclick="shareListModal(${list.id}, '${escapeHtml(list.name)}')" title="Share">
-            📧
-          </button>
-          <button class="btn-text" onclick="deleteList(${list.id}, '${escapeHtml(list.name)}')" title="Delete" style="color: var(--color-danger);">
-            🗑️
-          </button>
-        </div>
-      </div>
-      
-      <div class="flex gap-3">
-        <a href="#/lists/${list.id}" class="btn btn-primary btn-sm">View Items</a>
-        <a href="#/lists/${list.id}/add" class="btn btn-secondary btn-sm">+ Add Item</a>
-      </div>
-    </div>
-  `;
-}
-
-/**
- * Render a followed list card
- */
-function renderFollowedListCard(list) {
-  return `
-    <div class="card">
-      <div class="flex justify-between items-start mb-3">
-        <div style="flex: 1;">
-          <h3 class="card-title mb-1">
-            <a href="#/lists/${list.id}" style="color: var(--color-text-primary);">${escapeHtml(list.name)}</a>
-          </h3>
-          <p class="text-small text-muted">
-            ${list.itemCount || 0} items
-          </p>
-        </div>
-        
-        <button class="btn-text" onclick="unfollowList(${list.id}, '${escapeHtml(list.name)}')" title="Unfollow" style="color: var(--color-danger);">
-          ✖
-        </button>
-      </div>
-      
-      <a href="#/lists/${list.id}" class="btn btn-primary btn-sm">View Items</a>
-    </div>
-  `;
-}
-
-/**
- * Group followed lists by owner and render
- */
-function renderGroupedFollowedLists(followedLists) {
-  // Group lists by username (owner)
-  const grouped = {};
-  followedLists.forEach(list => {
-    const owner = list.username || 'Unknown';
-    if (!grouped[owner]) {
-      grouped[owner] = [];
-    }
-    grouped[owner].push(list);
-  });
-  
-  // Sort owners alphabetically
-  const sortedOwners = Object.keys(grouped).sort((a, b) => 
-    a.toLowerCase().localeCompare(b.toLowerCase())
-  );
-  
-  // Sort lists within each owner alphabetically
-  sortedOwners.forEach(owner => {
-    grouped[owner].sort((a, b) => 
-      a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-    );
-  });
-  
-  // Render grouped lists
-  return sortedOwners.map(owner => `
-    <div class="mb-6">
-      <h3 class="mb-3" style="font-size: var(--text-lg); font-weight: var(--font-semibold); color: var(--color-primary);">
-        ${escapeHtml(owner)}
-      </h3>
-      <div class="grid grid-cols-1" style="gap: var(--space-3); margin-left: var(--space-4);">
-        ${grouped[owner].map(renderFollowedListCard).join('')}
-      </div>
-    </div>
-  `).join('');
-}
-
-/**
- * Render empty state
- */
-function renderEmptyState(title, description, ctaLink = null) {
-  return `
-    <div class="empty-state" style="padding: var(--space-12) var(--space-4);">
-      <div class="empty-state-icon">📋</div>
-      <h3 class="empty-state-title">${title}</h3>
-      <p class="empty-state-description">${description}</p>
-      ${ctaLink ? `<a href="${ctaLink}" class="btn btn-primary">Search</a>` : ''}
-    </div>
-  `;
 }
 
 /**
