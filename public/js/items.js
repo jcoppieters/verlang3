@@ -69,9 +69,9 @@ async function renderListDetailPage(listId) {
             `}
           </div>
           <p class="text-muted">
-            ${isOwner ? 'Your list' : `by ${escapeHtml(list.ownerName)}`} • 
-            ${items.length} item${items.length !== 1 ? 's' : ''}
-            ${lastUpdate ? `<br><span style="font-size: var(--text-sm);">Last update: ${lastUpdate}</span>` : ''}
+            ${isOwner ? t('your_list') : `${t('by')} ${escapeHtml(list.ownerName)}`} • 
+            ${items.length} ${t('items')}
+            ${lastUpdate ? `<br><span style="font-size: var(--text-sm);">${t('last_update')}: ${lastUpdate}</span>` : ''}
           </p>
         </div>
         
