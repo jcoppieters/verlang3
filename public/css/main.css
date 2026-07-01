@@ -221,9 +221,31 @@ img {
   background-color: var(--color-primary-pale);
 }
 
+.user-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.user-link:hover {
+  color: var(--color-primary);
+  background-color: var(--color-primary-pale);
+}
+
+.user-icon {
+  font-size: var(--text-lg);
+  display: flex;
+  align-items: center;
+}
+
 .user-name {
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: inherit;
   display: none;
 }
 
