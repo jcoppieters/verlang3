@@ -495,9 +495,8 @@ select.input {
 /* ============================================
    DRAG AND DROP
    ============================================ */
-.item-card[draggable="true"] {
+.item-card[data-item-id] {
   position: relative;
-  cursor: move;
 }
 
 .drag-handle {
@@ -505,25 +504,49 @@ select.input {
   left: var(--space-2);
   top: 50%;
   transform: translateY(-50%);
-  font-size: var(--text-xl);
-  color: var(--color-text-light);
+  width: 20px;
+  height: 60px;
   cursor: grab;
   user-select: none;
-  padding: var(--space-2);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 10;
+}
+
+.drag-icon {
+  width: 24px;
+  height: 56px;
+  display: block;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 56" fill="none"><path d="M 6 10 L 12 4 L 18 10" stroke="%23DDDDDD" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="20" width="18" height="4" rx="2" fill="%23DDDDDD"/><rect x="3" y="28" width="18" height="4" rx="2" fill="%23DDDDDD"/><path d="M 6 42 L 12 48 L 18 42" stroke="%23DDDDDD" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 
 .drag-handle:active {
   cursor: grabbing;
 }
 
-.item-card[data-item-id]:hover .drag-handle {
-  color: var(--color-primary);
+.item-card[data-item-id]:hover .drag-icon {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 56" fill="none"><path d="M 6 10 L 12 4 L 18 10" stroke="%23333333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="20" width="18" height="4" rx="2" fill="%23333333"/><rect x="3" y="28" width="18" height="4" rx="2" fill="%23333333"/><path d="M 6 42 L 12 48 L 18 42" stroke="%23333333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>');
 }
 
 .item-card.dragging {
   opacity: 0.5;
   transform: scale(0.98);
   box-shadow: var(--shadow-xl);
+}
+
+/* Prevent child elements from interfering with drag events, except drag handle */
+.item-card.dragging * {
+  pointer-events: none;
+}
+
+.item-card.dragging .drag-handle {
+  pointer-events: auto;
 }
 
 .item-card.drag-over {
@@ -599,7 +622,8 @@ select.input {
 /* Mobile adjustments for drag handle */
 @media (max-width: 767px) {
   .drag-handle {
-    font-size: var(--text-2xl);
+    width: 24px;
+    height: 44px;
     padding: var(--space-3);
     left: 0;
     touch-action: none;

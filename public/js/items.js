@@ -104,7 +104,7 @@ function renderItemCard(item, isOwner) {
   
   return `
     <div class="card item-card" ${isOwner ? `data-item-id="${item.id}" data-item-priority="${item.priority || 50}"` : ''}>
-      ${isOwner ? '<div class="drag-handle" draggable="true">⋮⋮</div>' : ''}
+      ${isOwner ? '<div class="drag-handle" draggable="true"><span class="drag-icon"></span></div>' : ''}
       
       <!-- Mobile Layout -->
       <div class="item-card-mobile">
@@ -919,18 +919,34 @@ function handleDragOver(e) {
     e.preventDefault();
   }
   e.dataTransfer.dropEffect = 'move';
+  
+  // Get the card element (in case we're over a child element)
+  const targetCard = e.currentTarget;
+  
+  // Add visual feedback if we're over a different card
+  if (targetCard !== draggedElement && !targetCard.classList.contains('drag-over')) {
+    // Remove drag-over from all other cards
+    document.querySelectorAll('.item-card.drag-over').forEach(card => {
+      card.classList.remove('drag-over');
+    });
+    targetCard.classList.add('drag-over');
+    draggedOverElement = targetCard;
+  }
+  
   return false;
 }
 
 function handleDragEnter(e) {
-  if (e.currentTarget !== draggedElement) {
-    e.currentTarget.classList.add('drag-over');
-    draggedOverElement = e.currentTarget;
-  }
+  // Prevent event from bubbling to avoid flickering on child elements
+  e.preventDefault();
 }
 
 function handleDragLeave(e) {
-  e.currentTarget.classList.remove('drag-over');
+  // Only remove drag-over if we're actually leaving the card (not just entering a child)
+  const relatedTarget = e.relatedTarget;
+  if (!e.currentTarget.contains(relatedTarget)) {
+    e.currentTarget.classList.remove('drag-over');
+  }
 }
 
 function handleDrop(e) {
