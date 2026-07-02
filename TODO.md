@@ -351,12 +351,12 @@
   - [ ] Public access
 
 ### Frontend Testing
-- [ ] Test responsive layouts (mobile, tablet, desktop)
+- [X] Test responsive layouts (mobile, tablet, desktop)
 - [ ] Test all forms with validation
 - [ ] Test API error handling
-- [ ] Test navigation and routing
+- [X] Test navigation and routing
 - [ ] Test authentication flow
-- [ ] Test list/item operations
+- [X] Test list/item operations
 - [ ] Cross-browser testing
 
 ## Deployment Preparation
@@ -387,14 +387,14 @@
 
 ## Migration from verlang2
 
-- [ ] Verify password hash compatibility
-  - [ ] Test login with existing users
-  - [ ] Migration script if needed
+- [X] Verify password hash compatibility
+  - [X] Test login with existing users
+  - [X] Migration script if needed
 - [ ] Verify share ID encoding matches Java implementation
-- [ ] Data integrity check
-  - [ ] Verify all lists are accessible
-  - [ ] Verify all items display correctly
-  - [ ] Verify follows are intact
+- [X] Data integrity check
+  - [X] Verify all lists are accessible
+  - [X] Verify all items display correctly
+  - [X] Verify follows are intact
 - [ ] Parallel deployment testing
   - [ ] Run v3 alongside v2 temporarily
   - [ ] Compare functionality
@@ -419,13 +419,17 @@
 - [ ] Activity feed
 - [ ] Email digests
 - [ ] Social sharing (Facebook, Twitter)
-- [ ] Multi-language support
+- [X] Multi-language support
 - [ ] Dark mode
 - [ ] Accessibility improvements (ARIA, keyboard navigation)
 - [ ] Admin panel
 - [ ] Analytics dashboard
 
 ## install on server
+
+- [X] Did all changes needed to send mail through the smtp server with credentials of webmaster@verlanglijstje.be
+- [X] Installed / Deployed / in Production 30/06/2026  - v3.0.1
+- [X] updated v3.0.2 on 01/07/2026
 
 1) this is the current nginx config, what do I need to change? I run the backend server on poort 3007:
 

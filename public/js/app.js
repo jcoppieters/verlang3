@@ -17,6 +17,7 @@ const router = {
     '/lists/:id': renderListDetailPage,
     '/lists/:id/add': renderAddItemPage,
     '/search': renderSearchPage,
+    '/share/:id': renderSharedListPage,
   },
   
   /**
@@ -42,6 +43,8 @@ const router = {
     const publicRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password'];
     
     if (!isAuthenticated && !publicRoutes.includes(route)) {
+      // Save intended route to restore after login
+      sessionStorage.setItem('intendedRoute', hash);
       // Redirect to login if not authenticated
       window.location.hash = '#/login';
       return;

@@ -53,6 +53,9 @@ async function renderListDetailPage(listId) {
             </h1>
             <div class="flex items-center gap-2 list-header-actions">
               ${isOwner ? `
+                <button class="btn btn-sm btn-secondary" onclick="shareListModal(${listId}, '${escapeHtml(list.name)}')" title="${t('share_list')}">
+                  📤
+                </button>
                 <button class="btn btn-sm btn-secondary list-edit-btn" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="${t('edit')}">
                   ✏️ 
                 </button>
@@ -1135,4 +1138,55 @@ async function updateItemPriorities() {
     ui.showToast(t('failed_to_update_order'), 'error');
     console.error('Update priorities error:', error);
   }
+}
+
+/**
+ * Handle Shared List Page (requires authentication)
+ * Decodes the share ID, follows the list, then redirects to view it
+ */
+async function renderSharedListPage(encodedId) {
+  ui.showLoading('Processing share link...');
+  
+  try {
+    // Decode the share ID to get the real list ID
+    const listId = decodeShareId(parseInt(encodedId));
+    
+    // Try to follow the list (will fail gracefully if already following or own list)
+    let followed = false;
+    try {
+      const followResponse = await listsAPI.follow(listId);
+      if (followResponse.success) {
+        followed = true;
+        ui.showToast(t('now_following_list'), 'success');
+      }
+    } catch (error) {
+      // Ignore errors - user might already be following or it's their own list
+      console.log('Follow result:', error.message);
+    }
+    
+    // Reload sidebar to show the newly followed list
+    if (followed) {
+      await loadSidebar();
+    }
+    
+    // Hide loading screen
+    const mainContent = document.getElementById('mainContent');
+    if (mainContent) {
+      mainContent.innerHTML = '';
+    }
+    
+    // Small delay to ensure toast is visible before redirect
+    setTimeout(() => {
+      window.location.hash = `#/lists/${listId}`;
+    }, followed ? 800 : 0);
+  } catch (error) {
+    ui.showError(error.message || 'Failed to process share link');
+  }
+}
+
+/**
+ * Decode share ID (must match backend implementation)
+ */
+function decodeShareId(encodedId) {
+  return Math.floor((((encodedId - 19) / 97) - 17) / 97);
 }

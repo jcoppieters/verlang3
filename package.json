@@ -10,7 +10,12 @@
     "migrate-passwords": "ts-node server/scripts/migrate-passwords.ts",
     "test-email": "ts-node server/scripts/test-email.ts",
     "lint": "eslint server/**/*.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "version": "node scripts/sync-version.js && git add public/index.html",
+    "postversion": "git push && git push --tags",
+    "bump:patch": "npm version patch",
+    "bump:minor": "npm version minor",
+    "bump:major": "npm version major"
   },
   "keywords": [
     "wishlist",

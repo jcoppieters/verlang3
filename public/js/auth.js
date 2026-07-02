@@ -6,10 +6,22 @@
  * Render Login Page
  */
 function renderLoginPage() {
+  const currentLang = i18n.getCurrentLanguage();
   const main = document.getElementById('mainContent');
   main.innerHTML = `
     <div class="container" style="max-width: 480px; margin-top: 60px;">
       <div class="card auth-card">
+        <!-- Language Selector -->
+        <div style="display: flex; justify-content: flex-end; margin-bottom: var(--space-4);">
+          <div class="language-selector" style="display: flex; gap: var(--space-2); font-size: var(--text-sm);">
+            <button class="lang-btn ${currentLang === 'NL' ? 'active' : ''}" onclick="switchLanguageOnAuth('NL')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'NL' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'NL' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'NL' ? 'underline' : 'none'};">NL</button>
+            <span style="color: var(--color-text-light);">|</span>
+            <button class="lang-btn ${currentLang === 'FR' ? 'active' : ''}" onclick="switchLanguageOnAuth('FR')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'FR' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'FR' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'FR' ? 'underline' : 'none'};">FR</button>
+            <span style="color: var(--color-text-light);">|</span>
+            <button class="lang-btn ${currentLang === 'EN' ? 'active' : ''}" onclick="switchLanguageOnAuth('EN')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'EN' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'EN' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'EN' ? 'underline' : 'none'};">EN</button>
+          </div>
+        </div>
+        
         <div class="text-center mb-6">
           <div style="font-size: 3rem; margin-bottom: 1rem;">🎁</div>
           <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0.5rem;">
@@ -97,7 +109,15 @@ async function handleLogin(e) {
     
     if (response.success) {
       ui.showToast(t('welcome_back'), 'success');
-      window.location.hash = '#/lists';
+      
+      // Check if there's an intended route to redirect to
+      const intendedRoute = sessionStorage.getItem('intendedRoute');
+      if (intendedRoute) {
+        sessionStorage.removeItem('intendedRoute');
+        window.location.hash = '#' + intendedRoute;
+      } else {
+        window.location.hash = '#/lists';
+      }
     }
   } catch (error) {
     ui.showToast(error.message || t('login_failed'), 'error');
@@ -110,10 +130,22 @@ async function handleLogin(e) {
  * Render Register Page
  */
 function renderRegisterPage() {
+  const currentLang = i18n.getCurrentLanguage();
   const main = document.getElementById('mainContent');
   main.innerHTML = `
     <div class="container" style="max-width: 480px; margin-top: 40px;">
       <div class="card auth-card">
+        <!-- Language Selector -->
+        <div style="display: flex; justify-content: flex-end; margin-bottom: var(--space-4);">
+          <div class="language-selector" style="display: flex; gap: var(--space-2); font-size: var(--text-sm);">
+            <button class="lang-btn ${currentLang === 'NL' ? 'active' : ''}" onclick="switchLanguageOnAuth('NL')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'NL' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'NL' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'NL' ? 'underline' : 'none'};">NL</button>
+            <span style="color: var(--color-text-light);">|</span>
+            <button class="lang-btn ${currentLang === 'FR' ? 'active' : ''}" onclick="switchLanguageOnAuth('FR')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'FR' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'FR' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'FR' ? 'underline' : 'none'};">FR</button>
+            <span style="color: var(--color-text-light);">|</span>
+            <button class="lang-btn ${currentLang === 'EN' ? 'active' : ''}" onclick="switchLanguageOnAuth('EN')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'EN' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'EN' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'EN' ? 'underline' : 'none'};">EN</button>
+          </div>
+        </div>
+        
         <div class="text-center mb-6">
           <div style="font-size: 3rem; margin-bottom: 1rem;">🎁</div>
           <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0.5rem;">
@@ -250,7 +282,15 @@ async function handleRegister(e) {
     
     if (response.success) {
       ui.showToast(t('account_created_successfully'), 'success');
-      window.location.hash = '#/lists';
+      
+      // Check if there's an intended route to redirect to
+      const intendedRoute = sessionStorage.getItem('intendedRoute');
+      if (intendedRoute) {
+        sessionStorage.removeItem('intendedRoute');
+        window.location.hash = '#' + intendedRoute;
+      } else {
+        window.location.hash = '#/lists';
+      }
     }
   } catch (error) {
     ui.showToast(error.message || t('registration_failed'), 'error');
@@ -717,4 +757,13 @@ async function handlePasswordUpdate(e) {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Update Password';
   }
+}
+
+/**
+ * Switch language on auth pages (login/register)
+ */
+function switchLanguageOnAuth(lang) {
+  i18n.setLanguage(lang);
+  // Reload current auth page with new language
+  router.handleRoute();
 }

@@ -219,7 +219,8 @@
     "failed_to_follow_list": "Lijst volgen mislukt",
     "list_id_not_found": "Lijst ID niet gevonden",
     "order_updated": "Volgorde bijgewerkt",
-    "failed_to_update_order": "Volgorde bijwerken mislukt"
+    "failed_to_update_order": "Volgorde bijwerken mislukt",
+    "shared_list_viewing_message": "Je bekijkt een gedeelde verlanglijst. Je kunt items markeren als geschonken om {name} te laten weten dat je ze koopt!"
   },
   "FR": {
     "app_name": "Liste de souhaits",
@@ -440,7 +441,8 @@
     "failed_to_follow_list": "Échec du suivi de la liste",
     "list_id_not_found": "ID de liste introuvable",
     "order_updated": "Ordre mis à jour",
-    "failed_to_update_order": "Échec de la mise à jour de l'ordre"
+    "failed_to_update_order": "Échec de la mise à jour de l'ordre",
+    "shared_list_viewing_message": "Vous consultez une liste de souhaits partagée. Vous pouvez marquer des articles comme donnés pour informer {name} que vous les obtenez !"
   },  
   "EN": {
     "app_name": "Wishlist",
@@ -660,6 +662,7 @@
     "failed_to_follow_list": "Failed to follow list",
     "list_id_not_found": "List ID not found",
     "order_updated": "Order updated",
-    "failed_to_update_order": "Failed to update order"
+    "failed_to_update_order": "Failed to update order",
+    "shared_list_viewing_message": "You're viewing a shared wishlist. You can mark items as donated to let {name} know you're getting them!"
   }
 }
