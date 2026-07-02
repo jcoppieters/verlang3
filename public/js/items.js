@@ -100,8 +100,8 @@ function renderItemCard(item, isOwner) {
   const canInteract = !isOwner && item.status === 'A';
   
   return `
-    <div class="card item-card" ${isOwner ? `draggable="true" data-item-id="${item.id}" data-item-priority="${item.priority || 50}"` : ''}>
-      ${isOwner ? '<div class="drag-handle">⋮⋮</div>' : ''}
+    <div class="card item-card" ${isOwner ? `data-item-id="${item.id}" data-item-priority="${item.priority || 50}"` : ''}>
+      ${isOwner ? '<div class="drag-handle" draggable="true">⋮⋮</div>' : ''}
       
       <!-- Mobile Layout -->
       <div class="item-card-mobile">
@@ -117,7 +117,7 @@ function renderItemCard(item, isOwner) {
         <div class="item-footer-mobile">
           <div class="flex gap-4 text-small text-muted">
             ${item.url ? `<a href="${escapeHtml(item.url)}" target="_blank" class="text-primary">🔗 ${t('link')}</a>` : ''}
-            ${item.price ? `<span>💰 €${item.price}</span>` : ''}
+            ${item.price ? `<span>💰 ${item.price}€</span>` : ''}
           </div>
           ${statusBadge ? `<div>${statusBadge}</div>` : ''}
         </div>
@@ -921,29 +921,33 @@ let touchCurrentY = 0;
 let placeholder = null;
 
 function initializeDragAndDrop() {
-  const itemCards = document.querySelectorAll('.item-card[draggable="true"]');
+  const itemCards = document.querySelectorAll('.item-card[data-item-id]');
   
   itemCards.forEach(card => {
-    // Desktop drag and drop
-    card.addEventListener('dragstart', handleDragStart);
+    const dragHandle = card.querySelector('.drag-handle');
+    if (!dragHandle) return;
+    
+    // Desktop drag and drop - handle initiates, card moves
+    dragHandle.addEventListener('dragstart', handleDragStart);
     card.addEventListener('dragover', handleDragOver);
     card.addEventListener('drop', handleDrop);
     card.addEventListener('dragend', handleDragEnd);
     card.addEventListener('dragenter', handleDragEnter);
     card.addEventListener('dragleave', handleDragLeave);
     
-    // Mobile touch events
-    card.addEventListener('touchstart', handleTouchStart, { passive: false });
-    card.addEventListener('touchmove', handleTouchMove, { passive: false });
-    card.addEventListener('touchend', handleTouchEnd);
+    // Mobile touch events - only on drag handle
+    dragHandle.addEventListener('touchstart', handleTouchStart, { passive: false });
+    dragHandle.addEventListener('touchmove', handleTouchMove, { passive: false });
+    dragHandle.addEventListener('touchend', handleTouchEnd);
   });
 }
 
 function handleDragStart(e) {
-  draggedElement = e.currentTarget;
-  e.currentTarget.classList.add('dragging');
+  // Get the parent card element
+  draggedElement = e.target.closest('.item-card');
+  draggedElement.classList.add('dragging');
   e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
+  e.dataTransfer.setData('text/html', draggedElement.innerHTML);
 }
 
 function handleDragOver(e) {
@@ -1011,13 +1015,10 @@ function handleDragEnd(e) {
  * Touch event handlers for mobile
  */
 function handleTouchStart(e) {
-  // Don't start drag if touching a button, link, or input
-  const target = e.target;
-  if (target.closest('button') || target.closest('a') || target.closest('input') || target.closest('textarea')) {
-    return;
-  }
+  // Touch started on drag handle - get the parent card
+  draggedElement = e.target.closest('.item-card');
+  if (!draggedElement) return;
   
-  draggedElement = e.currentTarget;
   touchStartY = e.touches[0].clientY;
   
   draggedElement.classList.add('dragging');

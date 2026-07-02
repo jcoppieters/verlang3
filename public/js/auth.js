@@ -333,6 +333,19 @@ function renderProfilePage() {
           </div>
           
           <div class="form-group">
+            <label class="label" for="profileCurrentPassword">${t('current_password_label')}</label>
+            <input 
+              type="password" 
+              id="profileCurrentPassword" 
+              name="currentPassword" 
+              class="input" 
+              autocomplete="current-password"
+              placeholder="${t('current_password_placeholder')}"
+            />
+            <span class="text-small text-muted">${t('current_password_hint')}</span>
+          </div>
+          
+          <div class="form-group">
             <label class="label" for="profilePassword">${t('password_label')}</label>
             <input 
               type="password" 
@@ -381,7 +394,8 @@ async function handleProfileUpdate(e) {
   e.preventDefault();
   
   const formData = new FormData(e.target);
-  const password = formData.get('password')?.trim();
+  const currentPassword = formData.get('currentPassword')?.trim();
+  const newPassword = formData.get('password')?.trim();
   const newLanguage = formData.get('language');
   const currentLanguage = i18n.getCurrentLanguage();
   
@@ -403,11 +417,15 @@ async function handleProfileUpdate(e) {
       throw new Error(profileResponse.error || 'Failed to update profile');
     }
     
-    // Update password if provided
-    if (password && password.length > 0) {
+    // Update password if both current and new passwords are provided
+    if (newPassword && newPassword.length > 0) {
+      if (!currentPassword || currentPassword.length === 0) {
+        throw new Error(t('current_password_required'));
+      }
+      
       const passwordResponse = await authAPI.updatePassword({
-        currentPassword: '', // Not needed for plain text passwords
-        newPassword: password
+        currentPassword: currentPassword,
+        newPassword: newPassword
       });
       
       if (!passwordResponse.success) {
@@ -422,7 +440,8 @@ async function handleProfileUpdate(e) {
     // Update navbar
     document.getElementById('userName').textContent = userData.name;
     
-    // Clear password field
+    // Clear password fields
+    document.getElementById('profileCurrentPassword').value = '';
     document.getElementById('profilePassword').value = '';
     
     // If language changed, update and reload
