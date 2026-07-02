@@ -36,7 +36,7 @@ async function renderListsPage() {
           <div class="empty-state-icon">📋</div>
           <h2 class="empty-state-title">${t('no_lists_yet')}</h2>
           <p class="empty-state-description">${t('no_lists_desc')}</p>
-          <button class="btn btn-primary" onclick="showCreateListModal()">${t('create_list')}</button>
+          <button class="btn btn-primary" data-action="showCreateListModal">${t('create_list')}</button>
         </div>
       </div>
     `;
@@ -51,11 +51,11 @@ async function renderListsPage() {
 function showCreateListModal() {
   const modal = document.getElementById('modalContainer');
   modal.innerHTML = `
-    <div class="modal-overlay" onclick="closeModal(event)">
-      <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-overlay" data-action="closeModalOverlay">
+      <div class="modal">
         <div class="modal-header">
           <h2>${t('create_new_list')}</h2>
-          <button class="modal-close" onclick="closeModal()">&times;</button>
+          <button class="modal-close" data-action="closeModal">&times;</button>
         </div>
         
         <form id="createListForm">
@@ -75,7 +75,7 @@ function showCreateListModal() {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="button" class="btn btn-secondary" data-action="closeModal">${t('cancel')}</button>
             <button type="submit" class="btn btn-blue">${t('create_list')}</button>
           </div>
         </form>
@@ -124,11 +124,11 @@ async function handleCreateList(e) {
 function editList(id, name, isPublic) {
   const modal = document.getElementById('modalContainer');
   modal.innerHTML = `
-    <div class="modal-overlay" onclick="closeModal(event)">
-      <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-overlay" data-action="closeModalOverlay">
+      <div class="modal">
         <div class="modal-header">
           <h2>${t('edit_list')}</h2>
-          <button class="modal-close" onclick="closeModal()">&times;</button>
+          <button class="modal-close" data-action="closeModal">&times;</button>
         </div>
         
         <form id="editListForm" data-list-id="${id}">
@@ -147,8 +147,8 @@ function editList(id, name, isPublic) {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" onclick="deleteList(${id}, '${escapeHtml(name)}'); closeModal();" style="margin-right: auto;">🗑️ ${t('delete_list')}</button>
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="button" class="btn btn-danger" data-action="deleteList" data-id="${id}" data-name="${escapeHtml(name)}" style="margin-right: auto;">🗑️ ${t('delete_list')}</button>
+            <button type="button" class="btn btn-secondary" data-action="closeModal">${t('cancel')}</button>
             <button type="submit" class="btn btn-blue">${t('save')}</button>
           </div>
         </form>
@@ -240,11 +240,11 @@ async function unfollowList(id, name) {
 function shareListModal(id, name) {
   const modal = document.getElementById('modalContainer');
   modal.innerHTML = `
-    <div class="modal-overlay" onclick="closeModal(event)">
-      <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-overlay" data-action="closeModalOverlay">
+      <div class="modal">
         <div class="modal-header">
           <h2>Share "${escapeHtml(name)}"</h2>
-          <button class="modal-close" onclick="closeModal()">&times;</button>
+          <button class="modal-close" data-action="closeModal">&times;</button>
         </div>
         
         <form id="shareListForm" data-list-id="${id}">
@@ -261,7 +261,7 @@ function shareListModal(id, name) {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="button" class="btn btn-secondary" data-action="closeModal">${t('cancel')}</button>
             <button type="submit" class="btn btn-blue">${t('send_invitation')}</button>
           </div>
         </form>
@@ -306,19 +306,18 @@ async function handleShareList(e) {
 /**
  * Close modal
  */
-function closeModal(event) {
-  if (event && event.target.classList.contains('modal-overlay')) {
-    document.getElementById('modalContainer').innerHTML = '';
-  } else if (!event) {
-    document.getElementById('modalContainer').innerHTML = '';
-  }
+function closeModal() {
+  document.getElementById('modalContainer').innerHTML = '';
 }
 
 /**
- * Escape HTML to prevent XSS
+ * Escape HTML to prevent XSS — also escapes quotes so values are safe in attribute contexts
  */
 function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+  return String(text ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }

@@ -14,11 +14,11 @@ function renderLoginPage() {
         <!-- Language Selector -->
         <div style="display: flex; justify-content: flex-end; margin-bottom: var(--space-4);">
           <div class="language-selector" style="display: flex; gap: var(--space-2); font-size: var(--text-sm);">
-            <button class="lang-btn ${currentLang === 'NL' ? 'active' : ''}" onclick="switchLanguageOnAuth('NL')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'NL' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'NL' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'NL' ? 'underline' : 'none'};">NL</button>
+            <button class="lang-btn ${currentLang === 'NL' ? 'active' : ''}" data-action="switchLanguageOnAuth" data-lang="NL" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'NL' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'NL' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'NL' ? 'underline' : 'none'};">NL</button>
             <span style="color: var(--color-text-light);">|</span>
-            <button class="lang-btn ${currentLang === 'FR' ? 'active' : ''}" onclick="switchLanguageOnAuth('FR')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'FR' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'FR' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'FR' ? 'underline' : 'none'};">FR</button>
+            <button class="lang-btn ${currentLang === 'FR' ? 'active' : ''}" data-action="switchLanguageOnAuth" data-lang="FR" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'FR' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'FR' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'FR' ? 'underline' : 'none'};">FR</button>
             <span style="color: var(--color-text-light);">|</span>
-            <button class="lang-btn ${currentLang === 'EN' ? 'active' : ''}" onclick="switchLanguageOnAuth('EN')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'EN' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'EN' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'EN' ? 'underline' : 'none'};">EN</button>
+            <button class="lang-btn ${currentLang === 'EN' ? 'active' : ''}" data-action="switchLanguageOnAuth" data-lang="EN" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'EN' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'EN' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'EN' ? 'underline' : 'none'};">EN</button>
           </div>
         </div>
         
@@ -138,11 +138,11 @@ function renderRegisterPage() {
         <!-- Language Selector -->
         <div style="display: flex; justify-content: flex-end; margin-bottom: var(--space-4);">
           <div class="language-selector" style="display: flex; gap: var(--space-2); font-size: var(--text-sm);">
-            <button class="lang-btn ${currentLang === 'NL' ? 'active' : ''}" onclick="switchLanguageOnAuth('NL')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'NL' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'NL' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'NL' ? 'underline' : 'none'};">NL</button>
+            <button class="lang-btn ${currentLang === 'NL' ? 'active' : ''}" data-action="switchLanguageOnAuth" data-lang="NL" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'NL' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'NL' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'NL' ? 'underline' : 'none'};">NL</button>
             <span style="color: var(--color-text-light);">|</span>
-            <button class="lang-btn ${currentLang === 'FR' ? 'active' : ''}" onclick="switchLanguageOnAuth('FR')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'FR' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'FR' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'FR' ? 'underline' : 'none'};">FR</button>
+            <button class="lang-btn ${currentLang === 'FR' ? 'active' : ''}" data-action="switchLanguageOnAuth" data-lang="FR" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'FR' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'FR' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'FR' ? 'underline' : 'none'};">FR</button>
             <span style="color: var(--color-text-light);">|</span>
-            <button class="lang-btn ${currentLang === 'EN' ? 'active' : ''}" onclick="switchLanguageOnAuth('EN')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'EN' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'EN' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'EN' ? 'underline' : 'none'};">EN</button>
+            <button class="lang-btn ${currentLang === 'EN' ? 'active' : ''}" data-action="switchLanguageOnAuth" data-lang="EN" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'EN' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'EN' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'EN' ? 'underline' : 'none'};">EN</button>
           </div>
         </div>
         
@@ -404,15 +404,15 @@ function renderProfilePage() {
                 <button type="submit" class="btn btn-blue">
                   ${t('save_changes')}
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="window.location.hash='#/lists'">
+                <button type="button" class="btn btn-secondary" data-action="goToLists">
                   ${t('cancel')}
                 </button>
               </div>
               <div style="display: flex; gap: var(--space-3);">
-                <button type="button" class="btn btn-secondary" onclick="authAPI.logout()">
+                <button type="button" class="btn btn-secondary" data-action="logout">
                   ${t('logout')}
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="showForgetMeComingSoon()" title="${t('forget_about_me_desc')}">
+                <button type="button" class="btn btn-secondary" data-action="showForgetMeComingSoon" title="${t('forget_about_me_desc')}">
                   ${t('forget_about_me')}
                 </button>
               </div>
@@ -715,47 +715,6 @@ async function handleResetPassword(e) {
       submitBtn.disabled = false;
       submitBtn.textContent = t('reset_password_button');
     }
-  }
-}
-
-/**
- * Handle Password Update
- */
-async function handlePasswordUpdate(e) {
-  e.preventDefault();
-  
-  const formData = new FormData(e.target);
-  const passwords = {
-    currentPassword: formData.get('currentPassword'),
-    newPassword: formData.get('newPassword'),
-  };
-  const confirmNewPassword = formData.get('confirmNewPassword');
-  
-  // Clear error
-  document.getElementById('confirmNewPasswordError').textContent = '';
-  
-  // Validate
-  if (passwords.newPassword !== confirmNewPassword) {
-    document.getElementById('confirmNewPasswordError').textContent = 'Passwords do not match';
-    return;
-  }
-  
-  const submitBtn = e.target.querySelector('button[type="submit"]');
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="loading-inline"></span> Updating...';
-  
-  try {
-    const response = await authAPI.updatePassword(passwords);
-    
-    if (response.success) {
-      ui.showToast('Password updated successfully', 'success');
-      e.target.reset();
-    }
-  } catch (error) {
-    ui.showToast(error.message || 'Failed to update password', 'error');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Update Password';
   }
 }
 

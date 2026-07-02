@@ -242,7 +242,7 @@ const itemsAPI = {
   donate: async (itemId, data = {}) => {
     return apiRequest(`/items/${itemId}/donate`, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: data,
     });
   },
   
@@ -263,27 +263,19 @@ const itemsAPI = {
 };
 
 /**
- * Share API (public endpoints)
+ * Share API
  */
 const shareAPI = {
-  // Get shared list (no auth required)
-  getSharedList: async (encodedId) => {
-    return fetch(`${API_BASE_URL}/share/${encodedId}`)
-      .then(res => res.json());
-  },
-  
-  // Donate from share (no auth required)
-  donateFromShare: async (encodedItemId, data) => {
-    return fetch(`${API_BASE_URL}/share/${encodedItemId}/donate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    }).then(res => res.json());
-  },
-  
   // Search users and lists
   search: async (query) => {
-    return apiRequest(`/search?q=${encodeURIComponent(query)}`);
+    return apiRequest(`/share/search?q=${encodeURIComponent(query)}`);
+  },
+  
+  // Follow a list via share link (works for both public and private lists)
+  followFromShare: async (encodedId) => {
+    return apiRequest(`/share/${encodedId}/follow`, {
+      method: 'POST',
+    });
   },
 };
 
@@ -299,9 +291,10 @@ const ui = {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.innerHTML = `
-      <span class="toast-message">${message}</span>
+      <span class="toast-message"></span>
       <button class="toast-close">&times;</button>
     `;
+    toast.querySelector('.toast-message').textContent = message;
     
     container.appendChild(toast);
     
@@ -335,8 +328,8 @@ const ui = {
         <div class="empty-state">
           <div class="empty-state-icon">⚠️</div>
           <h2 class="empty-state-title">Oops! Something went wrong</h2>
-          <p class="empty-state-description">${message}</p>
-          <button class="btn btn-primary" onclick="window.location.reload()">Reload Page</button>
+          <p class="empty-state-description">${escapeHtml(message)}</p>
+          <button class="btn btn-primary" data-action="reload">Reload Page</button>
         </div>
       </div>
     `;

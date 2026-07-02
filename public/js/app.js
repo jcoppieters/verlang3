@@ -185,11 +185,11 @@ function renderHomePage() {
       <!-- Language Selector -->
       <div style="display: flex; justify-content: flex-end; padding: var(--space-4) 0;">
         <div class="language-selector" style="display: flex; gap: var(--space-2); font-size: var(--text-sm);">
-          <button class="lang-btn ${currentLang === 'NL' ? 'active' : ''}" onclick="switchLanguage('NL')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'NL' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'NL' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'NL' ? 'underline' : 'none'};">NL</button>
+          <button class="lang-btn ${currentLang === 'NL' ? 'active' : ''}" data-action="switchLanguage" data-lang="NL" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'NL' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'NL' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'NL' ? 'underline' : 'none'};">NL</button>
           <span style="color: var(--color-text-light);">|</span>
-          <button class="lang-btn ${currentLang === 'FR' ? 'active' : ''}" onclick="switchLanguage('FR')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'FR' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'FR' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'FR' ? 'underline' : 'none'};">FR</button>
+          <button class="lang-btn ${currentLang === 'FR' ? 'active' : ''}" data-action="switchLanguage" data-lang="FR" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'FR' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'FR' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'FR' ? 'underline' : 'none'};">FR</button>
           <span style="color: var(--color-text-light);">|</span>
-          <button class="lang-btn ${currentLang === 'EN' ? 'active' : ''}" onclick="switchLanguage('EN')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'EN' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'EN' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'EN' ? 'underline' : 'none'};">EN</button>
+          <button class="lang-btn ${currentLang === 'EN' ? 'active' : ''}" data-action="switchLanguage" data-lang="EN" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'EN' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'EN' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'EN' ? 'underline' : 'none'};">EN</button>
         </div>
       </div>
       
@@ -285,11 +285,11 @@ function showV3SplashMessage() {
         <!-- Language Selector -->
         <div style="display: flex; justify-content: flex-end; margin-bottom: var(--space-4);">
           <div class="language-selector" style="display: flex; gap: var(--space-2); font-size: var(--text-sm);">
-            <button class="lang-btn ${currentLang === 'NL' ? 'active' : ''}" onclick="switchLanguageInSplash('NL')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'NL' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'NL' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'NL' ? 'underline' : 'none'};">NL</button>
+            <button class="lang-btn ${currentLang === 'NL' ? 'active' : ''}" data-action="switchLanguageInSplash" data-lang="NL" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'NL' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'NL' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'NL' ? 'underline' : 'none'};">NL</button>
             <span style="color: var(--color-text-light);">|</span>
-            <button class="lang-btn ${currentLang === 'FR' ? 'active' : ''}" onclick="switchLanguageInSplash('FR')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'FR' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'FR' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'FR' ? 'underline' : 'none'};">FR</button>
+            <button class="lang-btn ${currentLang === 'FR' ? 'active' : ''}" data-action="switchLanguageInSplash" data-lang="FR" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'FR' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'FR' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'FR' ? 'underline' : 'none'};">FR</button>
             <span style="color: var(--color-text-light);">|</span>
-            <button class="lang-btn ${currentLang === 'EN' ? 'active' : ''}" onclick="switchLanguageInSplash('EN')" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'EN' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'EN' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'EN' ? 'underline' : 'none'};">EN</button>
+            <button class="lang-btn ${currentLang === 'EN' ? 'active' : ''}" data-action="switchLanguageInSplash" data-lang="EN" style="cursor: pointer; background: none; border: none; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-weight: ${currentLang === 'EN' ? 'var(--font-bold)' : 'var(--font-normal)'}; color: ${currentLang === 'EN' ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; text-decoration: ${currentLang === 'EN' ? 'underline' : 'none'};">EN</button>
           </div>
         </div>
         
@@ -312,7 +312,7 @@ function showV3SplashMessage() {
             </a>
           </div>
           
-          <button class="btn btn-primary btn-lg" onclick="closeV3SplashMessage()" style="width: 100%;">
+          <button class="btn btn-primary btn-lg" data-action="closeV3SplashMessage" style="width: 100%;">
             ${t('v3_splash_button')}
           </button>
         </div>
@@ -380,7 +380,7 @@ async function loadSidebar() {
       <div class="sidebar-group">
         <div class="sidebar-group-title">
           <span>${t('my_lists')}</span>
-          <button class="btn btn-sm btn-primary" onclick="showCreateListModal()">+ ${t('new')}</button>
+          <button class="btn btn-sm btn-primary" data-action="showCreateListModal">+ ${t('new')}</button>
         </div>
         ${myLists.length > 0 ? myLists.map(list => `
           <a href="#/lists/${list.id}" class="sidebar-item" data-list-id="${list.id}">
@@ -478,6 +478,45 @@ function switchLanguageInSplash(lang) {
   localStorage.removeItem('v3SplashSeen');
   showV3SplashMessage();
 }
+
+/**
+ * Delegated click handling for [data-action] elements.
+ * Keeps user data out of inline handlers (XSS-safe) and allows a strict CSP
+ * (no inline scripts/handlers).
+ */
+const clickActions = {
+  toggleSidebar: () => toggleSidebar(),
+  reload: () => window.location.reload(),
+  back: () => window.history.back(),
+  goToLists: () => { window.location.hash = '#/lists'; },
+  logout: () => authAPI.logout(),
+  switchLanguage: (el) => switchLanguage(el.dataset.lang),
+  switchLanguageInSplash: (el) => switchLanguageInSplash(el.dataset.lang),
+  switchLanguageOnAuth: (el) => switchLanguageOnAuth(el.dataset.lang),
+  closeV3SplashMessage: () => closeV3SplashMessage(),
+  showForgetMeComingSoon: () => showForgetMeComingSoon(),
+  closeModal: () => closeModal(),
+  closeModalOverlay: (el, e) => { if (e.target === el) closeModal(); },
+  showCreateListModal: () => showCreateListModal(),
+  editList: (el) => editList(Number(el.dataset.id), el.dataset.name, el.dataset.public),
+  deleteList: (el) => { deleteList(Number(el.dataset.id), el.dataset.name); closeModal(); },
+  shareListModal: (el) => shareListModal(Number(el.dataset.id), el.dataset.name),
+  unfollowList: (el) => unfollowList(Number(el.dataset.id), el.dataset.name),
+  followListFromSearch: (el) => followListFromSearch(Number(el.dataset.id)),
+  showAddItemModal: (el) => showAddItemModal(Number(el.dataset.id)),
+  showEditItemModal: (el) => showEditItemModal(Number(el.dataset.id)),
+  deleteItemFromModal: (el) => deleteItemFromModal(Number(el.dataset.id), el.dataset.name),
+  reserveItem: (el) => reserveItem(Number(el.dataset.id), el.dataset.name),
+  donateItem: (el) => donateItem(Number(el.dataset.id), el.dataset.name),
+  takebackItem: (el) => takebackItem(Number(el.dataset.id)),
+};
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-action]');
+  if (!el) return;
+  const action = clickActions[el.dataset.action];
+  if (action) action(el, e);
+});
 
 /**
  * Start the application when DOM is ready

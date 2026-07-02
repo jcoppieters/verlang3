@@ -32,7 +32,7 @@ export async function getAllLists(req: AuthRequest, res: Response): Promise<void
     // Get user's own lists
     const myLists = await query<ListWithOwner>(
       `SELECT l.*, 
-        (SELECT COUNT(*) FROM items WHERE list = l.id AND status != 'D') as itemCount
+        (SELECT COUNT(*) FROM items WHERE list = l.id) as itemCount
        FROM lists l 
        WHERE l.user = ? 
        ORDER BY l.lastupdate DESC`,
@@ -42,7 +42,7 @@ export async function getAllLists(req: AuthRequest, res: Response): Promise<void
     // Get followed lists
     const followedLists = await query<ListWithOwner>(
       `SELECT l.*, u.name as username,
-        (SELECT COUNT(*) FROM items WHERE list = l.id AND status != 'D') as itemCount
+        (SELECT COUNT(*) FROM items WHERE list = l.id) as itemCount
        FROM lists l
        JOIN follows f ON f.list = l.id
        JOIN users u ON l.user = u.id
@@ -322,6 +322,15 @@ export async function followList(req: AuthRequest, res: Response): Promise<void>
       res.status(400).json({
         success: false,
         error: 'You cannot follow your own list'
+      });
+      return;
+    }
+
+    // Only allow following public lists
+    if (list.public !== 'Y') {
+      res.status(403).json({
+        success: false,
+        error: 'This list is private'
       });
       return;
     }

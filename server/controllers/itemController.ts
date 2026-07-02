@@ -129,12 +129,15 @@ export async function updateItem(req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    // Update item
+    // Update item (preserve priority/showfrom when not provided, e.g. edit modal)
     await execute(
       `UPDATE items 
        SET name = ?, url = ?, description = ?, price = ?, priority = ?, showfrom = ?
        WHERE id = ?`,
-      [name, url || '', description || '', price || '', priority || 1, showfrom || null, itemId]
+      [name, url || '', description || '', price || '',
+       priority ?? item.priority,
+       showfrom !== undefined ? showfrom : item.showfrom,
+       itemId]
     );
 
     // Update list lastupdate
@@ -262,13 +265,21 @@ export async function reserveItem(req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    // Reserve item
-    await execute(
+    // Reserve item (conditional update prevents double-reservation race)
+    const result = await execute(
       `UPDATE items 
        SET status = 'R', givenby = ?, givencomment = ?, givenat = NOW()
-       WHERE id = ?`,
+       WHERE id = ? AND status = 'A'`,
       [req.user.id, comment, itemId]
     );
+
+    if (result.affectedRows === 0) {
+      res.status(409).json({
+        success: false,
+        error: 'Item is not available'
+      });
+      return;
+    }
 
     const updatedItem = await queryOne<Item>(
       `SELECT i.*, IFNULL(u.name, i.givenname) as username
@@ -348,13 +359,21 @@ export async function donateItem(req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    // Mark as donated
-    await execute(
+    // Mark as donated (conditional update prevents races with other givers)
+    const result = await execute(
       `UPDATE items 
        SET status = 'S', givenby = ?, givencomment = ?, givenat = NOW(), showfrom = ?
-       WHERE id = ?`,
-      [req.user.id, comment, showfrom || null, itemId]
+       WHERE id = ? AND (status = 'A' OR (status = 'R' AND givenby = ?))`,
+      [req.user.id, comment, showfrom || null, itemId, req.user.id]
     );
+
+    if (result.affectedRows === 0) {
+      res.status(409).json({
+        success: false,
+        error: 'Item is no longer available'
+      });
+      return;
+    }
 
     const updatedItem = await queryOne<Item>(
       `SELECT i.*, IFNULL(u.name, i.givenname) as username
@@ -485,9 +504,10 @@ export async function reorderItems(req: AuthRequest, res: Response): Promise<voi
     }
 
     // Update priorities based on position in array
-    // Top item gets highest priority (100), bottom gets lowest
+    // Top item gets highest priority, bottom gets lowest
+    // Use itemIds.length to avoid negative values for large lists
     const updatePromises = itemIds.map((itemId: number, index: number) => {
-      const priority = 100 - index;
+      const priority = itemIds.length - index;
       return execute(
         'UPDATE items SET priority = ? WHERE id = ? AND list = ?',
         [priority, itemId, listId]

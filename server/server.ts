@@ -17,12 +17,11 @@ import './config/database';
 const app = express();
 const PORT = config.server.port;
 
-// Trust proxy - required when running behind nginx
-app.set('trust proxy', true);
+// Trust proxy - only the single nginx proxy in front of us (spoofed X-Forwarded-For is ignored)
+app.set('trust proxy', 1);
 
-// Security middleware
+// Security middleware (default CSP: script-src 'self', no inline handlers/scripts)
 app.use(helmet({
-  contentSecurityPolicy: false, // Disable for development, enable in production
   crossOriginEmbedderPolicy: false
 }));
 
@@ -70,9 +69,12 @@ app.use('/api', (req: Request, _res: Response, next: NextFunction) => {
   if (Object.keys(params).length > 0) argsSummary.push(`params: ${JSON.stringify(params)}`);
   if (Object.keys(query).length > 0) argsSummary.push(`query: ${JSON.stringify(query)}`);
   if (Object.keys(body).length > 0) {
-    // Don't log passwords
+    // Don't log sensitive fields
+    const sensitiveKeys = ['password', 'currentPassword', 'newPassword', 'token'];
     const sanitizedBody = { ...body };
-    if (sanitizedBody.password) sanitizedBody.password = '***';
+    sensitiveKeys.forEach(key => {
+      if (sanitizedBody[key]) sanitizedBody[key] = '***';
+    });
     argsSummary.push(`body: ${JSON.stringify(sanitizedBody)}`);
   }
   
@@ -83,6 +85,7 @@ app.use('/api', (req: Request, _res: Response, next: NextFunction) => {
 // Apply rate limiting
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
+app.use('/api/auth/forgot-password', authLimiter);
 app.use('/api/', limiter);
 
 // API routes
@@ -90,11 +93,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/lists', listRoutes);
 app.use('/api', itemRoutes);
 app.use('/api/share', shareRoutes);
-app.use('/api/search', (req, res) => {
-  // Search route is in shareController
-  const { search } = require('./controllers/shareController');
-  search(req, res);
-});
 
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, '../public')));

@@ -11,7 +11,7 @@
  * 3. Test all email templates (welcome, password reset, share)
  */
 
-import { sendEmail, sendWelcomeEmail, sendPasswordResetEmail, sendShareEmail } from '../utils/email';
+import { sendEmail, sendPasswordResetEmail, sendShareEmail } from '../utils/email';
 import { config } from '../config/conf';
 
 // ANSI color codes for terminal output
@@ -88,20 +88,6 @@ async function sendTestEmail(recipientEmail: string) {
   }
 }
 
-async function testWelcomeEmail(recipientEmail: string) {
-  log(`\n👋 Testing welcome email template to ${recipientEmail}...`, colors.blue);
-  
-  const success = await sendWelcomeEmail(recipientEmail, 'Test User');
-  
-  if (success) {
-    log('✅ Welcome email sent successfully!', colors.green);
-    return true;
-  } else {
-    log('❌ Failed to send welcome email', colors.red);
-    return false;
-  }
-}
-
 async function testPasswordResetEmail(recipientEmail: string) {
   log(`\n🔑 Testing password reset email template to ${recipientEmail}...`, colors.blue);
   
@@ -165,15 +151,11 @@ async function main() {
   results.push(await sendTestEmail(recipientEmail));
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Test 2: Welcome email template
-  results.push(await testWelcomeEmail(recipientEmail));
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Test 3: Password reset email template
+  // Test 2: Password reset email template
   results.push(await testPasswordResetEmail(recipientEmail));
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Test 4: Share notification email template
+  // Test 3: Share notification email template
   results.push(await testShareEmail(recipientEmail));
   
   // Summary

@@ -53,17 +53,17 @@ async function renderListDetailPage(listId) {
             </h1>
             <div class="flex items-center gap-2 list-header-actions">
               ${isOwner ? `
-                <button class="btn btn-sm btn-secondary" onclick="shareListModal(${listId}, '${escapeHtml(list.name)}')" title="${t('share_list')}">
+                <button class="btn btn-sm btn-secondary" data-action="shareListModal" data-id="${listId}" data-name="${escapeHtml(list.name)}" title="${t('share_list')}">
                   📤
                 </button>
-                <button class="btn btn-sm btn-secondary list-edit-btn" onclick="editList(${listId}, '${escapeHtml(list.name)}', '${list.public}')" title="${t('edit')}">
+                <button class="btn btn-sm btn-secondary list-edit-btn" data-action="editList" data-id="${listId}" data-name="${escapeHtml(list.name)}" data-public="${list.public}" title="${t('edit')}">
                   ✏️ 
                 </button>
-                <button class="btn btn-sm btn-primary" onclick="showAddItemModal(${listId})" title="${t('add_item_title')}">
+                <button class="btn btn-sm btn-primary" data-action="showAddItemModal" data-id="${listId}" title="${t('add_item_title')}">
                   + ${t('add')}
                 </button>
               ` : `
-                <button class="btn btn-sm btn-secondary" onclick="unfollowList(${listId}, '${escapeHtml(list.name)}')" title="${t('unfollow')}">
+                <button class="btn btn-sm btn-secondary" data-action="unfollowList" data-id="${listId}" data-name="${escapeHtml(list.name)}" title="${t('unfollow')}">
                   ✖ ${t('unfollow')}
                 </button>
               `}
@@ -120,7 +120,7 @@ function renderItemCard(item, isOwner) {
         <div class="item-footer-mobile">
           <div class="flex gap-4 text-small text-muted">
             ${item.url ? `<a href="${escapeHtml(item.url)}" target="_blank" class="text-primary">🔗 ${t('link')}</a>` : ''}
-            ${item.price ? `<span>💰 ${item.price}€</span>` : ''}
+            ${item.price ? `<span>💰 ${escapeHtml(item.price)}€</span>` : ''}
           </div>
           ${statusBadge ? `<div>${statusBadge}</div>` : ''}
         </div>
@@ -159,7 +159,7 @@ function renderItemCard(item, isOwner) {
             
             <div class="flex gap-4 text-small text-muted mb-3">
               ${item.url ? `<a href="${escapeHtml(item.url)}" target="_blank" class="text-primary">🔗 ${t('link')}</a>` : ''}
-              ${item.price ? `<span>💰 €${item.price}</span>` : ''}
+              ${item.price ? `<span>💰 €${escapeHtml(item.price)}</span>` : ''}
             </div>
             
             ${!isOwner && item.status === 'R' && item.username ? `
@@ -207,7 +207,7 @@ function getStatusBadge(status) {
  * Render owner action buttons
  */
 function renderOwnerActions(item) {
-  return `<button class="btn btn-sm btn-secondary" onclick="showEditItemModal(${item.id})" title="${t('edit')}">✏️ ${t('edit')}</button>`;
+  return `<button class="btn btn-sm btn-secondary" data-action="showEditItemModal" data-id="${item.id}" title="${t('edit')}">✏️ ${t('edit')}</button>`;
 }
 
 /**
@@ -220,10 +220,10 @@ function renderGuestActions(item, canInteract) {
   // If available, show Reserve and Donate buttons
   if (item.status === 'A') {
     return `
-      <button class="btn btn-sm btn-warning" onclick="reserveItem(${item.id}, '${escapeHtml(item.name)}')">
+      <button class="btn btn-sm btn-warning" data-action="reserveItem" data-id="${item.id}" data-name="${escapeHtml(item.name)}">
         ${t('mark_as_reserved')}
       </button>
-      <button class="btn btn-sm btn-success" onclick="donateItem(${item.id}, '${escapeHtml(item.name)}')">
+      <button class="btn btn-sm btn-success" data-action="donateItem" data-id="${item.id}" data-name="${escapeHtml(item.name)}">
         ${t('mark_as_donated')}
       </button>
     `;
@@ -232,10 +232,10 @@ function renderGuestActions(item, canInteract) {
   // If reserved by me, show Donate and Take Back buttons
   if (isReservedByMe) {
     return `
-      <button class="btn btn-sm btn-success" onclick="donateItem(${item.id}, '${escapeHtml(item.name)}')">
+      <button class="btn btn-sm btn-success" data-action="donateItem" data-id="${item.id}" data-name="${escapeHtml(item.name)}">
         ${t('mark_as_donated')}
       </button>
-      <button class="btn btn-sm btn-secondary" onclick="takebackItem(${item.id})">
+      <button class="btn btn-sm btn-secondary" data-action="takebackItem" data-id="${item.id}">
         ${t('unmark')}
       </button>
     `;
@@ -291,20 +291,9 @@ function renderAddItemPage(listId) {
             <input type="url" id="itemUrl" name="url" class="input" placeholder="${t('enter_item_link')}" />
           </div>
           
-          <div class="grid grid-cols-2" style="gap: var(--space-4);">
-            <div class="form-group">
-              <label class="label" for="itemPrice">${t('price')}</label>
-              <input type="number" id="itemPrice" name="price" class="input" step="0.01" min="0" placeholder="${t('enter_item_price')}" />
-            </div>
-            
-            <div class="form-group">
-              <label class="label" for="itemPriority">${t('priority')}</label>
-              <select id="itemPriority" name="priority" class="select">
-                <option value="1">${t('low')}</option>
-                <option value="2">${t('medium')}</option>
-                <option value="3" selected>${t('high')}</option>
-              </select>
-            </div>
+          <div class="form-group">
+            <label class="label" for="itemPrice">${t('price')}</label>
+            <input type="number" id="itemPrice" name="price" class="input" step="0.01" min="0" placeholder="${t('enter_item_price')}" />
           </div>
           
           <div class="form-group">
@@ -314,7 +303,7 @@ function renderAddItemPage(listId) {
           </div>
           
           <div class="card-footer">
-            <button type="button" class="btn btn-secondary" onclick="window.history.back()">${t('cancel')}</button>
+            <button type="button" class="btn btn-secondary" data-action="back">${t('cancel')}</button>
             <button type="submit" class="btn btn-primary">${t('add_item')}</button>
           </div>
         </form>
@@ -339,7 +328,6 @@ async function handleAddItem(e) {
     description: formData.get('description').trim(),
     url: formData.get('url').trim(),
     price: formData.get('price') || null,
-    priority: formData.get('priority') || 3,
     showfrom: formData.get('showfrom') || null,
   };
   
@@ -367,11 +355,11 @@ async function handleAddItem(e) {
 function showAddItemModal(listId) {
   const modal = document.getElementById('modalContainer');
   modal.innerHTML = `
-    <div class="modal-overlay" onclick="closeModal(event)">
-      <div class="modal item-modal" onclick="event.stopPropagation()">
+    <div class="modal-overlay" data-action="closeModalOverlay">
+      <div class="modal item-modal">
         <div class="modal-header">
           <h2>${t('add_new_item')}</h2>
-          <button class="modal-close" onclick="closeModal()">&times;</button>
+          <button class="modal-close" data-action="closeModal">&times;</button>
         </div>
         
         <form id="addItemModalForm" data-list-id="${listId}">
@@ -398,7 +386,7 @@ function showAddItemModal(listId) {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="button" class="btn btn-secondary" data-action="closeModal">${t('cancel')}</button>
             <button type="submit" class="btn btn-blue">${t('add')}</button>
           </div>
         </form>
@@ -423,7 +411,6 @@ async function handleAddItemModal(e) {
     description: formData.get('description').trim(),
     url: formData.get('url').trim(),
     price: formData.get('price') || '',
-    priority: 100, // New items get highest priority by default
   };
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -465,11 +452,11 @@ async function showEditItemModal(itemId) {
     
     const modal = document.getElementById('modalContainer');
     modal.innerHTML = `
-      <div class="modal-overlay" onclick="closeModal(event)">
-        <div class="modal item-modal" onclick="event.stopPropagation()">
+      <div class="modal-overlay" data-action="closeModalOverlay">
+        <div class="modal item-modal">
           <div class="modal-header">
             <h2>${t('edit_item')}</h2>
-            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <button class="modal-close" data-action="closeModal">&times;</button>
           </div>
           
           <form id="editItemModalForm" data-item-id="${itemId}">
@@ -491,16 +478,16 @@ async function showEditItemModal(itemId) {
               
               <div class="form-group">
                 <label class="label" for="editItemPrice">${t('price')}</label>
-                <input type="number" id="editItemPrice" name="price" class="input" step="0.01" min="0" value="${item.price || ''}" />
+                <input type="number" id="editItemPrice" name="price" class="input" step="0.01" min="0" value="${escapeHtml(item.price || '')}" />
               </div>
             </div>
             
             <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
-              <button type="button" class="btn btn-danger" onclick="deleteItemFromModal(${itemId}, '${escapeHtml(item.name)}')">
+              <button type="button" class="btn btn-danger" data-action="deleteItemFromModal" data-id="${itemId}" data-name="${escapeHtml(item.name)}">
                 ${t('delete')}
               </button>
               <div style="display: flex; gap: var(--space-2);">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+                <button type="button" class="btn btn-secondary" data-action="closeModal">${t('cancel')}</button>
                 <button type="submit" class="btn btn-blue">${t('save')}</button>
               </div>
             </div>
@@ -572,43 +559,16 @@ async function deleteItemFromModal(itemId, itemName) {
 }
 
 /**
- * Edit item - Deprecated, use showEditItemModal
- */
-async function editItem(itemId) {
-  showEditItemModal(itemId);
-}
-
-/**
- * Delete item
- */
-async function deleteItem(itemId, itemName) {
-  if (!confirm(t('delete_item_confirm_text').replace('{name}', itemName))) {
-    return;
-  }
-  
-  try {
-    const response = await itemsAPI.delete(itemId);
-    
-    if (response.success) {
-      ui.showToast(t('item_deleted_successfully'), 'success');
-      window.location.reload();
-    }
-  } catch (error) {
-    ui.showToast(error.message || t('failed_to_delete_item'), 'error');
-  }
-}
-
-/**
  * Donate item modal
  */
 function donateItem(itemId, itemName) {
   const modal = document.getElementById('modalContainer');
   modal.innerHTML = `
-    <div class="modal-overlay" onclick="closeModal(event)">
-      <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-overlay" data-action="closeModalOverlay">
+      <div class="modal">
         <div class="modal-header">
           <h2>${t('donate_item_title')}</h2>
-          <button class="modal-close" onclick="closeModal()">&times;</button>
+          <button class="modal-close" data-action="closeModal">&times;</button>
         </div>
         
         <form id="donateItemForm" data-item-id="${itemId}">
@@ -628,7 +588,7 @@ function donateItem(itemId, itemName) {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="button" class="btn btn-secondary" data-action="closeModal">${t('cancel')}</button>
             <button type="submit" class="btn btn-success">${t('mark_as_donated')}</button>
           </div>
         </form>
@@ -680,11 +640,11 @@ async function handleDonateItem(e) {
 function reserveItem(itemId, itemName) {
   const modal = document.getElementById('modalContainer');
   modal.innerHTML = `
-    <div class="modal-overlay" onclick="closeModal(event)">
-      <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-overlay" data-action="closeModalOverlay">
+      <div class="modal">
         <div class="modal-header">
           <h2>${t('reserve_item_title')}</h2>
-          <button class="modal-close" onclick="closeModal()">&times;</button>
+          <button class="modal-close" data-action="closeModal">&times;</button>
         </div>
         
         <form id="reserveItemForm" data-item-id="${itemId}">
@@ -699,7 +659,7 @@ function reserveItem(itemId, itemName) {
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeModal()">${t('cancel')}</button>
+            <button type="button" class="btn btn-secondary" data-action="closeModal">${t('cancel')}</button>
             <button type="submit" class="btn btn-warning">${t('mark_as_reserved')}</button>
           </div>
         </form>
@@ -768,7 +728,7 @@ async function renderSearchPage() {
         <h1 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 0;">
           ${t('search_title')}
         </h1>
-        <button class="btn btn-secondary btn-sm mobile-only" onclick="window.history.back()">${t('cancel')}</button>
+        <button class="btn btn-secondary btn-sm mobile-only" data-action="back">${t('cancel')}</button>
       </div>
       
       <div class="card mb-6">
@@ -867,7 +827,7 @@ async function handleSearch(e) {
             ${userData.lists.length > 0 ? `
               <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-left: var(--space-4);">
                 ${userData.lists.map(list => `
-                  <button class="btn btn-secondary btn-sm" onclick="followListFromSearch(${list.id})" style="display: inline-flex; align-items: center; gap: var(--space-1);">
+                  <button class="btn btn-secondary btn-sm" data-action="followListFromSearch" data-id="${list.id}" style="display: inline-flex; align-items: center; gap: var(--space-1);">
                     <span style="font-size: 1.2em;">+</span> ${escapeHtml(list.name)}
                   </button>
                 `).join('')}
@@ -908,13 +868,6 @@ async function followListFromSearch(listId) {
 }
 
 /**
- * Follow user (follow all their public lists)
- */
-async function followUser(userId) {
-  ui.showToast(t('follow_all_user_lists_soon'), 'info');
-}
-
-/**
  * Initialize drag and drop for reordering items
  */
 let draggedElement = null;
@@ -951,6 +904,14 @@ function handleDragStart(e) {
   draggedElement.classList.add('dragging');
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/html', draggedElement.innerHTML);
+  
+  // Set the drag image to the entire card, positioned at the handle
+  // Calculate offset from click position on handle to card edge
+  const cardRect = draggedElement.getBoundingClientRect();
+  const offsetX = e.clientX - cardRect.left;
+  const offsetY = e.clientY - cardRect.top;
+  
+  e.dataTransfer.setDragImage(draggedElement, offsetX, offsetY);
 }
 
 function handleDragOver(e) {
@@ -1142,26 +1103,27 @@ async function updateItemPriorities() {
 
 /**
  * Handle Shared List Page (requires authentication)
- * Decodes the share ID, follows the list, then redirects to view it
+ * Follows the list via share link, then redirects to view it
  */
 async function renderSharedListPage(encodedId) {
   ui.showLoading('Processing share link...');
   
   try {
-    // Decode the share ID to get the real list ID
-    const listId = decodeShareId(parseInt(encodedId));
-    
-    // Try to follow the list (will fail gracefully if already following or own list)
+    // Follow the list using the share endpoint (works for both public and private lists)
     let followed = false;
+    let listId = null;
+    
     try {
-      const followResponse = await listsAPI.follow(listId);
+      const followResponse = await shareAPI.followFromShare(encodedId);
       if (followResponse.success) {
         followed = true;
+        listId = followResponse.listId;
         ui.showToast(t('now_following_list'), 'success');
       }
     } catch (error) {
-      // Ignore errors - user might already be following or it's their own list
+      // If follow fails, still try to decode and navigate (might already be following)
       console.log('Follow result:', error.message);
+      listId = decodeShareId(parseInt(encodedId));
     }
     
     // Reload sidebar to show the newly followed list

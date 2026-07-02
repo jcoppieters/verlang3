@@ -127,9 +127,9 @@ export async function login(req: AuthRequest, res: Response): Promise<void> {
   try {
     const { username, password } = req.body;
 
-    // Get user by username or email (case-insensitive)
+    // Get user by username or email (collation is case-insensitive)
     const user = await queryOne<User>(
-      'SELECT * FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)',
+      'SELECT * FROM users WHERE username = ? OR email = ?',
       [username, username]
     );
 
@@ -348,9 +348,9 @@ export async function forgotPassword(req: AuthRequest, res: Response): Promise<v
   try {
     const { email } = req.body;
 
-    // Find user by email
+    // Find user by email (collation is case-insensitive)
     const user = await queryOne<User>(
-      'SELECT * FROM users WHERE LOWER(email) = LOWER(?)',
+      'SELECT * FROM users WHERE email = ?',
       [email]
     );
 

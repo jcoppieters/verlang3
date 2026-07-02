@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { query, queryOne, execute } from '../config/database';
+import { query, queryOne } from '../config/database';
 import { encodeShareId, decodeShareId } from '../utils/helpers';
 import { AuthRequest } from '../middleware/auth';
 
@@ -9,7 +9,16 @@ export async function getSharedList(req: Request, res: Response): Promise<void> 
     const encodedId = parseInt(req.params.encodedId);
     const listId = decodeShareId(encodedId);
 
-    // Get list with owner info
+    // Validate the decoded ID by re-encoding
+    if (encodeShareId(listId) !== encodedId) {
+      res.status(404).json({
+        success: false,
+        error: 'Invalid share link'
+      });
+      return;
+    }
+
+    // Get list with owner info (share links work for both public and private lists)
     const list = await queryOne(
       `SELECT l.*, u.name as username
        FROM lists l
@@ -65,53 +74,82 @@ export async function getSharedList(req: Request, res: Response): Promise<void> 
   }
 }
 
-// Donate item from public share (no authentication required)
-export async function donateFromShare(req: Request, res: Response): Promise<void> {
+// Search for users and public lists
+// Follow a list via share link (works for both public and private lists)
+export async function followFromShare(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const encodedId = parseInt(req.params.encodedItemId);
-    const itemId = decodeShareId(encodedId);
-    const { givenname = '', givencomment = '' } = req.body;
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        error: 'Not authenticated'
+      });
+      return;
+    }
 
-    // Get item
-    const item = await queryOne(
-      'SELECT * FROM items WHERE id = ?',
-      [itemId]
-    );
+    const encodedId = parseInt(req.params.encodedId);
+    const listId = decodeShareId(encodedId);
 
-    if (!item) {
+    // Validate the decoded ID by re-encoding
+    if (encodeShareId(listId) !== encodedId) {
       res.status(404).json({
         success: false,
-        error: 'Item not found'
+        error: 'Invalid share link'
       });
       return;
     }
 
-    if (item.status !== 'A') {
+    // Check if list exists
+    const list = await queryOne(
+      'SELECT * FROM lists WHERE id = ?',
+      [listId]
+    );
+
+    if (!list) {
+      res.status(404).json({
+        success: false,
+        error: 'List not found'
+      });
+      return;
+    }
+
+    if (list.user === req.user.id) {
       res.status(400).json({
         success: false,
-        error: 'Item is not available'
+        error: 'You cannot follow your own list'
       });
       return;
     }
 
-    // Mark as donated with optional name
-    await execute(
-      `UPDATE items 
-       SET status = 'S', givenname = ?, givencomment = ?, givenat = NOW()
-       WHERE id = ?`,
-      [givenname || 'Anonymous', givencomment, itemId]
+    // Check if already following
+    const alreadyFollowing = await queryOne(
+      'SELECT 1 FROM follows WHERE user = ? AND list = ?',
+      [req.user.id, listId]
+    );
+
+    if (alreadyFollowing) {
+      res.status(400).json({
+        success: false,
+        error: 'You are already following this list'
+      });
+      return;
+    }
+
+    // Add follow (works for both public and private lists when via share link)
+    await query(
+      'INSERT INTO follows (user, list) VALUES (?, ?)',
+      [req.user.id, listId]
     );
 
     res.json({
       success: true,
-      message: 'Thank you! Item marked as donated',
-      listId: item.list
+      message: 'Now following this list',
+      listId
     });
   } catch (error) {
-    console.error('Donate from share error:', error);
+    console.error('Follow from share error:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to donate item'
+      error: 'Failed to follow list'
     });
   }
 }
@@ -144,7 +182,7 @@ export async function search(req: AuthRequest, res: Response): Promise<void> {
     // Search public lists (excluding current user's own lists)
     const lists = await query(
       `SELECT l.*, u.name as username, u.id as userId,
-        (SELECT COUNT(*) FROM items WHERE list = l.id AND status != 'D') as itemCount
+        (SELECT COUNT(*) FROM items WHERE list = l.id) as itemCount
        FROM lists l
        JOIN users u ON l.user = u.id
        WHERE l.public = 'Y' 

@@ -41,22 +41,6 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
   });
 }
 
-// Optional authentication (doesn't fail if no token)
-export function optionalAuth(req: AuthRequest, _res: Response, next: NextFunction): void {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (token) {
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-      if (!err) {
-        req.user = user as UserPayload;
-      }
-    });
-  }
-
-  next();
-}
-
 // Generate JWT token
 export function generateToken(user: { id: number; username: string; name: string }): string {
   return jwt.sign(

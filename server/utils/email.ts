@@ -48,14 +48,6 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
   }
 }
 
-// Send welcome email
-export async function sendWelcomeEmail(to: string, name: string): Promise<boolean> {
-  const subject = 'Welcome to Verlanglijstje.be!';
-  const text = `Dear ${name},\n\nWelcome to Verlanglijstje.be!\n\nYou can now create wishlists, share them with friends and family, and follow other people's lists.\n\nBest regards,\nThe Verlanglijstje Team`;
-  
-  return sendEmail({ to, subject, text });
-}
-
 // Send password reset email
 export async function sendPasswordResetEmail(to: string, name: string, resetToken: string): Promise<boolean> {
   const resetUrl = `${config.server.appUrl}/#/reset-password?token=${resetToken}`;
@@ -79,4 +71,4 @@ export async function sendShareEmail(
   return sendEmail({ to, subject, text });
 }
 
-export default { sendEmail, sendWelcomeEmail, sendPasswordResetEmail, sendShareEmail };
+export default { sendEmail, sendPasswordResetEmail, sendShareEmail };
