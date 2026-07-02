@@ -54,9 +54,27 @@ const i18n = {
   /**
    * Get translation for a key
    */
-  t(key, fallback = null) {
-    const translation = this.translations[this.currentLanguage]?.[key];
-    return translation || fallback || key;
+  t(key, params = null) {
+    let translation = this.translations[this.currentLanguage]?.[key];
+    
+    // If params is a string, it's the fallback value (backward compatibility)
+    if (typeof params === 'string') {
+      return translation || params || key;
+    }
+    
+    // If no translation found, return the key
+    if (!translation) {
+      return key;
+    }
+    
+    // If params is an object, replace placeholders
+    if (params && typeof params === 'object') {
+      Object.keys(params).forEach(paramKey => {
+        translation = translation.replace(`{${paramKey}}`, params[paramKey]);
+      });
+    }
+    
+    return translation;
   },
   
   /**
@@ -75,6 +93,6 @@ const i18n = {
 };
 
 // Shorthand function for translations
-function t(key, fallback = null) {
-  return i18n.t(key, fallback);
+function t(key, params = null) {
+  return i18n.t(key, params);
 }

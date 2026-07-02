@@ -243,20 +243,19 @@ function shareListModal(id, name) {
     <div class="modal-overlay" data-action="closeModalOverlay">
       <div class="modal">
         <div class="modal-header">
-          <h2>Share "${escapeHtml(name)}"</h2>
-          <button class="modal-close" data-action="closeModal">&times;</button>
+          <h2>${t('share_list_title', { name: escapeHtml(name) })}</h2>
         </div>
         
         <form id="shareListForm" data-list-id="${id}">
           <div class="modal-body">
             <div class="form-group">
-              <label class="label" for="shareEmail">Recipient Email</label>
-              <input type="email" id="shareEmail" name="email" class="input" required placeholder="friend@example.com" />
+              <label class="label" for="shareEmail">${t('recipient_email')}</label>
+              <input type="email" id="shareEmail" name="email" class="input" required placeholder="${t('recipient_email_placeholder')}" />
             </div>
             
             <div class="form-group mb-0">
-              <label class="label" for="shareMessage">Message (optional)</label>
-              <textarea id="shareMessage" name="message" class="textarea" placeholder="Add a personal message..."></textarea>
+              <label class="label" for="shareMessage">${t('message_optional')}</label>
+              <textarea id="shareMessage" name="message" class="textarea" placeholder="${t('message_placeholder')}"></textarea>
             </div>
           </div>
           
