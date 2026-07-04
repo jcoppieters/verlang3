@@ -306,9 +306,9 @@ function showV3SplashMessage() {
             <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
               ${t('v3_splash_report')}
             </p>
-            <a href="mailto:webmasters@verlanglijstje.be" 
+            <a href="mailto:webmaster@verlanglijstje.be" 
                style="color: var(--color-primary); font-weight: var(--font-semibold); text-decoration: none; word-break: break-all;">
-              webmasters@verlanglijstje.be
+              webmaster@verlanglijstje.be
             </a>
           </div>
           
