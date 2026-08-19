@@ -36,7 +36,8 @@ const router = {
    */
   handleRoute() {
     const hash = window.location.hash.slice(1) || '/';
-    const { route, params } = this.matchRoute(hash);
+    const path = hash.split('?')[0];  // strip query string before route matching
+    const { route, params } = this.matchRoute(path);
     
     // Check authentication
     const isAuthenticated = ui.isAuthenticated();
