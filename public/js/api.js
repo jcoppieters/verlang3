@@ -46,8 +46,8 @@ async function apiRequest(endpoint, options = {}) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
     const data = await response.json();
     
-    // Handle unauthorized (but not for login/register endpoints)
-    if (response.status === 401 && !endpoint.startsWith('/auth/')) {
+    // Handle unauthorized/forbidden (but not for login/register endpoints)
+    if ((response.status === 401 || response.status === 403) && !endpoint.startsWith('/auth/')) {
       clearToken();
       clearUser();
       window.location.hash = '#/login';

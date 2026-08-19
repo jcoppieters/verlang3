@@ -29,7 +29,7 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
-      res.status(403).json({
+      res.status(401).json({
         success: false,
         error: 'Invalid or expired token'
       });
