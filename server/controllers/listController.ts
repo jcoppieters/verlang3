@@ -112,15 +112,36 @@ export async function getList(req: AuthRequest, res: Response): Promise<void> {
 
     // Get items
     const items = await query(
-      `SELECT i.*, 
-        IFNULL(u.name, i.givenname) as username,
-        IF(i.showfrom IS NULL OR i.showfrom <= DATE(NOW()), 'T', 'F') as shown
+      `SELECT i.*,
+        IFNULL(u.name, i.givenname) as username
        FROM items i
        LEFT JOIN users u ON i.givenby = u.id
        WHERE i.list = ?
        ORDER BY i.priority DESC, i.id DESC`,
       [listId]
     );
+
+    // The owner must never learn which of their own items are reserved or
+    // donated (and by whom) - that would spoil the surprise. A donor can
+    // optionally opt in to an early reveal via showfrom; reservations have
+    // no such opt-in and stay hidden from the owner until donated.
+    const responseItems = isOwner
+      ? items.map((item: any) => {
+          const revealed = item.status === 'S' && !!item.showfrom && new Date(item.showfrom) <= new Date();
+          if (revealed) {
+            return item;
+          }
+          return {
+            ...item,
+            status: 'A',
+            givenby: null,
+            givenname: null,
+            givencomment: null,
+            givenat: null,
+            username: null
+          };
+        })
+      : items;
 
     res.json({
       success: true,
@@ -129,7 +150,7 @@ export async function getList(req: AuthRequest, res: Response): Promise<void> {
         isOwner,
         isFollowing: !!isFollowing
       },
-      items
+      items: responseItems
     });
   } catch (error) {
     console.error('Get list error:', error);

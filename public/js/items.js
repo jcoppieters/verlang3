@@ -96,10 +96,10 @@ async function renderListDetailPage(listId) {
  * Render item card
  */
 function renderItemCard(item, isOwner) {
-  // For owner: show badge only if shown === 'T' (showfrom date has passed)
-  // For non-owner: always show badge
-  const statusBadge = !isOwner ? getStatusBadge(item.status) : 
-                      (item.shown === 'T' ? getStatusBadge(item.status) : '');
+  // The backend already redacts reservation/donation status for the owner's
+  // own items (unless the donor opted into an early reveal), so it's always
+  // safe to render whatever status comes back.
+  const statusBadge = getStatusBadge(item.status);
   const canInteract = !isOwner && item.status === 'A';
   
   return `
@@ -137,7 +137,7 @@ function renderItemCard(item, isOwner) {
           </p>
         ` : ''}
         
-        ${isOwner && item.status === 'S' && item.shown === 'T' && item.username ? `
+        ${isOwner && item.status === 'S' && item.username ? `
           <p class="text-small" style="color: var(--color-success); margin-top: var(--space-2);">
             ${t('donated_by')} ${escapeHtml(item.username)}
             ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
@@ -174,7 +174,7 @@ function renderItemCard(item, isOwner) {
               </p>
             ` : ''}
             
-            ${isOwner && item.status === 'S' && item.shown === 'T' && item.username ? `
+            ${isOwner && item.status === 'S' && item.username ? `
               <p class="text-small" style="color: var(--color-success);">
                 ${t('donated_by')} ${escapeHtml(item.username)}
                 ${item.givencomment ? `<br><em>"${escapeHtml(item.givencomment)}"</em>` : ''}
