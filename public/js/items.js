@@ -80,12 +80,19 @@ async function renderListDetailPage(listId) {
         <div class="grid grid-cols-1" id="itemsContainer">
           ${items.length === 0 ? renderEmptyItemsState(isOwner) : items.map(item => renderItemCard(item, isOwner)).join('')}
         </div>
+
+        ${items.length > 0 ? '<div id="adSlotListDetail" style="margin-top: var(--space-8);"></div>' : ''}
       </div>
     `;
-    
+
     // Initialize drag and drop for owners
     if (isOwner && items.length > 0) {
       initializeDragAndDrop();
+    }
+
+    // Only render ads on lists that actually have content
+    if (items.length > 0) {
+      renderAdSlot('adSlotListDetail');
     }
   } catch (error) {
     ui.showError(error.message || t('failed_to_load_list'));

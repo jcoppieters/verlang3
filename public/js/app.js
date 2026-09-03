@@ -239,9 +239,13 @@ function renderHomePage() {
             </p>
           </div>
         </div>
+
+        <div id="adSlotHome" style="margin-top: var(--space-10);"></div>
       </div>
     </div>
   `;
+
+  renderAdSlot('adSlotHome');
 }
 
 /**
