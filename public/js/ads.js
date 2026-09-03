@@ -13,10 +13,7 @@
  */
 const ADSENSE_CLIENT = 'ca-pub-5834909718334305';
 
-// TODO: replace with a real ad unit slot ID from the AdSense dashboard
-// (Ads > By ad unit > Display ads) before this ships. Auto ads should also
-// be turned off for the site so it can't place ads outside this slot.
-const ADSENSE_SLOT = 'REPLACE_WITH_AD_UNIT_SLOT_ID';
+const ADSENSE_SLOT = '6639850046';
 
 let adsenseScriptPromise = null;
 
