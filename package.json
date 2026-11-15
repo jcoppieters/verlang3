@@ -1,6 +1,6 @@
 {
   "name": "verlanglijstje-v3",
-  "version": "3.0.13",
+  "version": "3.0.14",
   "description": "Modern wishlist management platform",
   "main": "dist/server.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "express-rate-limit": "^7.4.0",

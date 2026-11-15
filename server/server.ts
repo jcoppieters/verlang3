@@ -88,6 +88,15 @@ app.use('/api/auth/register', authLimiter);
 app.use('/api/auth/forgot-password', authLimiter);
 app.use('/api/', limiter);
 
+// Health checks must be reachable before the authenticated item router.
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.json({
+    success: true,
+    message: 'Server is running',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/lists', listRoutes);
@@ -96,15 +105,6 @@ app.use('/api/share', shareRoutes);
 
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, '../public')));
-
-// Health check endpoint
-app.get('/api/health', (_req: Request, res: Response) => {
-  res.json({
-    success: true,
-    message: 'Server is running',
-    timestamp: new Date().toISOString()
-  });
-});
 
 // Handle SPA routing - serve index.html for all non-API routes
 app.get('*', (req: Request, res: Response) => {
