@@ -102,8 +102,8 @@ export function validateItem(req: Request, res: Response, next: NextFunction): v
     errors.push('Item name must be less than 128 characters');
   }
 
-  if (url && url.length > 255) {
-    errors.push('URL must be less than 255 characters');
+  if (url && url.length > 2048) {
+    errors.push('URL must be 2048 characters or fewer');
   }
 
   if (description && description.length > 255) {

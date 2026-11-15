@@ -295,7 +295,7 @@ function renderAddItemPage(listId) {
           
           <div class="form-group">
             <label class="label" for="itemUrl">${t('url_link')}</label>
-            <input type="url" id="itemUrl" name="url" class="input" placeholder="${t('enter_item_link')}" />
+            <input type="url" id="itemUrl" name="url" class="input" maxlength="2048" placeholder="${t('enter_item_link')}" />
           </div>
           
           <div class="form-group">
@@ -383,7 +383,7 @@ function showAddItemModal(listId) {
             
             <div class="form-group">
               <label class="label" for="itemUrl">${t('url_link')}</label>
-              <input type="url" id="itemUrl" name="url" class="input" placeholder="${t('url_placeholder')}" />
+              <input type="url" id="itemUrl" name="url" class="input" maxlength="2048" placeholder="${t('url_placeholder')}" />
             </div>
             
             <div class="form-group">
@@ -480,7 +480,7 @@ async function showEditItemModal(itemId) {
               
               <div class="form-group">
                 <label class="label" for="editItemUrl">${t('url_link')}</label>
-                <input type="url" id="editItemUrl" name="url" class="input" value="${escapeHtml(item.url || '')}" />
+                <input type="url" id="editItemUrl" name="url" class="input" maxlength="2048" value="${escapeHtml(item.url || '')}" />
               </div>
               
               <div class="form-group">

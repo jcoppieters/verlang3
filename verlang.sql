@@ -40,7 +40,7 @@ CREATE TABLE `items` (
   `id` int NOT NULL AUTO_INCREMENT,
   `list` int NOT NULL DEFAULT '0',
   `name` varchar(128) DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
+  `url` text,
   `description` varchar(255) NOT NULL DEFAULT '',
   `price` varchar(64) NOT NULL DEFAULT '',
   `priority` int NOT NULL DEFAULT '1',
