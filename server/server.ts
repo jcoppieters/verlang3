@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { config } from './config/conf';
+import packageJson from '../package.json';
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -92,6 +93,7 @@ app.use('/api/', limiter);
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     success: true,
+    version: packageJson.version,
     message: 'Server is running',
     timestamp: new Date().toISOString()
   });
